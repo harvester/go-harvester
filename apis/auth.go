@@ -19,7 +19,7 @@ func (s *AuthAPI) Login(username, password string) error {
 		return err
 	}
 	if respCode != http.StatusOK {
-		return ResponseError(respCode, respBody)
+		return NewResponseError(respCode, respBody)
 	}
 	return nil
 }

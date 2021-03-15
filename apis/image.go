@@ -26,7 +26,7 @@ func (s *ImagesAPI) List() (*ImageList, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &collection)
 	return &collection, err
@@ -39,7 +39,7 @@ func (s *ImagesAPI) Create(obj *Image) (*Image, error) {
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &created); err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (s *ImagesAPI) Update(namespace, name string, obj *Image) (*Image, error) {
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &created); err != nil {
 		return nil, err
@@ -71,7 +71,7 @@ func (s *ImagesAPI) Get(namespace, name string) (*Image, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &obj); err != nil {
 		return nil, err
@@ -87,7 +87,7 @@ func (s *ImagesAPI) Delete(namespace, name string) (*Image, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &obj); err != nil {
 		return nil, err

@@ -49,6 +49,7 @@ require (
 	github.com/guonaihong/gout v0.1.5
 	github.com/rancher/apiserver v0.0.0-20201023000256-1a0a904f9197
 	github.com/rancher/harvester v0.0.2-0.20210312094853-bd3ff23b03b8
+	github.com/rancher/wrangler v0.7.3-0.20210219161540-ef7fe9ce2443
 	k8s.io/api v0.20.4
 	k8s.io/apimachinery v0.20.4
 	k8s.io/utils v0.0.0-20201110183641-67b214c5f920

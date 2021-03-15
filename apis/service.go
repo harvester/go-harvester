@@ -26,7 +26,7 @@ func (s *ServicesAPI) List() (*SVCList, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &collection)
 	return &collection, err
@@ -39,7 +39,7 @@ func (s *ServicesAPI) Get(name string) (*Service, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &obj); err != nil {
 		return nil, err
@@ -54,7 +54,7 @@ func (s *ServicesAPI) Create(obj *Service) (*Service, error) {
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &created); err != nil {
 		return nil, err
@@ -70,7 +70,7 @@ func (s *ServicesAPI) Delete(namespace, name string) (*Service, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &obj); err != nil {
 		return nil, err

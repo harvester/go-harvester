@@ -26,7 +26,7 @@ func (s *VirtualMachineInstanceAPI) List() (*VirtualMachineInstanceList, error) 
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &collection)
 	return &collection, err
@@ -40,7 +40,7 @@ func (s *VirtualMachineInstanceAPI) Get(namespace, name string) (*VirtualMachine
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &obj); err != nil {
 		return nil, err

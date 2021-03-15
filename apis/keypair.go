@@ -26,7 +26,7 @@ func (s *KeyPairsAPI) List() (*KeyPairList, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &collection)
 	return &collection, err
@@ -39,7 +39,7 @@ func (s *KeyPairsAPI) Create(obj *KeyPair) (*KeyPair, error) {
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &created); err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (s *KeyPairsAPI) Update(namespace, name string, obj *KeyPair) (*KeyPair, er
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &created); err != nil {
 		return nil, err
@@ -71,7 +71,7 @@ func (s *KeyPairsAPI) Get(namespace, name string) (*KeyPair, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &obj); err != nil {
 		return nil, err
@@ -87,7 +87,7 @@ func (s *KeyPairsAPI) Delete(namespace, name string) (*KeyPair, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &obj); err != nil {
 		return nil, err

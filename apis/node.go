@@ -26,7 +26,7 @@ func (s *NodesAPI) List() (*NodeList, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &collection)
 	return &collection, err
@@ -39,7 +39,7 @@ func (s *NodesAPI) Get(name string) (*Node, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &obj); err != nil {
 		return nil, err

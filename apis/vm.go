@@ -3,6 +3,7 @@ package apis
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/rancher/apiserver/pkg/types"
 	kubevirtv1 "kubevirt.io/client-go/api/v1"
@@ -26,7 +27,7 @@ func (s *VirtualMachinesAPI) List() (*VirtualMachineList, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &collection)
 	return &collection, err
@@ -39,7 +40,7 @@ func (s *VirtualMachinesAPI) Create(obj *VirtualMachine) (*VirtualMachine, error
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &created); err != nil {
 		return nil, err
@@ -55,7 +56,7 @@ func (s *VirtualMachinesAPI) Update(namespace, name string, obj *VirtualMachine)
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &created); err != nil {
 		return nil, err
@@ -71,7 +72,7 @@ func (s *VirtualMachinesAPI) Get(namespace, name string) (*VirtualMachine, error
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &obj); err != nil {
 		return nil, err
@@ -79,15 +80,17 @@ func (s *VirtualMachinesAPI) Get(namespace, name string) (*VirtualMachine, error
 	return obj, nil
 }
 
-func (s *VirtualMachinesAPI) Delete(namespace, name string) (*VirtualMachine, error) {
+func (s *VirtualMachinesAPI) Delete(namespace, name string, removedDisks []string) (*VirtualMachine, error) {
 	var obj *VirtualMachine
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Delete(namespacedName)
+	respCode, respBody, err := s.Resource.Delete(namespacedName, map[string]string{
+		"removedDisks": strings.Join(removedDisks, ","),
+	})
 	if err != nil {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, ResponseError(respCode, respBody)
+		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &obj); err != nil {
 		return nil, err
@@ -124,7 +127,7 @@ func (s *VirtualMachinesAPI) simpleAction(namespace, name, action string) error 
 		return err
 	}
 	if respCode != http.StatusNoContent {
-		return ResponseError(respCode, respBody)
+		return NewResponseError(respCode, respBody)
 	}
 	return nil
 }

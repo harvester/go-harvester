@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/json"
 	"fmt"
 
 	corev1 "k8s.io/api/core/v1"
@@ -60,9 +61,10 @@ type VMCloudInit struct {
 }
 
 type VMBuilder struct {
-	vm           *apis.VirtualMachine
-	diskIndex    int
-	networkIndex int
+	vm              *apis.VirtualMachine
+	sshNames        []string
+	dataVolumeNames []string
+	nicNames        []string
 }
 
 func NewVMBuilder(creator string) *VMBuilder {
@@ -83,23 +85,6 @@ func NewVMBuilder(creator string) *VMBuilder {
 			corev1.ResourceMemory: resource.MustParse(defaultVMMemory),
 		},
 	}
-	interfaces := []kubevirtv1.Interface{
-		{
-			Name:  defaultVMManagementInterfaceName,
-			Model: defaultVMInterfaceModel,
-			InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{
-				Masquerade: &kubevirtv1.InterfaceMasquerade{},
-			},
-		},
-	}
-	networks := []kubevirtv1.Network{
-		{
-			Name: defaultVMManagementNetworkName,
-			NetworkSource: kubevirtv1.NetworkSource{
-				Pod: &kubevirtv1.PodNetwork{},
-			},
-		},
-	}
 	template := &kubevirtv1.VirtualMachineInstanceTemplateSpec{
 		ObjectMeta: metav1.ObjectMeta{
 			Labels: vmLabels,
@@ -109,11 +94,11 @@ func NewVMBuilder(creator string) *VMBuilder {
 				CPU: cpu,
 				Devices: kubevirtv1.Devices{
 					Disks:      []kubevirtv1.Disk{},
-					Interfaces: interfaces,
+					Interfaces: []kubevirtv1.Interface{},
 				},
 				Resources: resources,
 			},
-			Networks: networks,
+			Networks: []kubevirtv1.Network{},
 			Volumes:  []kubevirtv1.Volume{},
 		},
 	}
@@ -150,17 +135,17 @@ func (v *VMBuilder) Memory(memory string) *VMBuilder {
 	return v
 }
 
-func (v *VMBuilder) CPU(cores uint32) *VMBuilder {
-	v.vm.Spec.Template.Spec.Domain.CPU.Cores = cores
+func (v *VMBuilder) CPU(cores int) *VMBuilder {
+	v.vm.Spec.Template.Spec.Domain.CPU.Cores = uint32(cores)
 	return v
 }
 
 func (v *VMBuilder) generateDiskName() string {
-	return fmt.Sprintf("disk-%d", v.diskIndex)
+	return fmt.Sprintf("disk-%d", len(v.dataVolumeNames))
 }
 
-func (v *VMBuilder) generateNetworkName() string {
-	return fmt.Sprintf("network-%d", v.networkIndex)
+func (v *VMBuilder) generateNICName() string {
+	return fmt.Sprintf("nic-%d", len(v.nicNames))
 }
 
 func (v *VMBuilder) Blank(diskSize, diskBus string) *VMBuilder {
@@ -171,10 +156,16 @@ func (v *VMBuilder) Image(diskSize, diskBus, sourceHTTPURL string) *VMBuilder {
 	return v.DataVolume(diskSize, diskBus, sourceHTTPURL)
 }
 
+func (v *VMBuilder) SSHKey(sshKeyName string) *VMBuilder {
+	v.sshNames = append(v.sshNames, sshKeyName)
+	return v
+}
+
 func (v *VMBuilder) DataVolume(diskSize, diskBus string, sourceHTTPURL ...string) *VMBuilder {
 	diskName := v.generateDiskName()
-	volumeMode := corev1.PersistentVolumeFilesystem
 	dataVolumeName := fmt.Sprintf("%s-%s-%s", v.vm.Name, diskName, rand.String(5))
+	v.dataVolumeNames = append(v.dataVolumeNames, dataVolumeName)
+	volumeMode := corev1.PersistentVolumeFilesystem
 	// DataVolumeTemplates
 	dataVolumeTemplates := v.vm.Spec.DataVolumeTemplates
 	dataVolumeSpecSource := cdiv1alpha1.DataVolumeSource{
@@ -233,13 +224,12 @@ func (v *VMBuilder) DataVolume(diskSize, diskBus string, sourceHTTPURL ...string
 		},
 	})
 	v.vm.Spec.Template.Spec.Volumes = volumes
-	// diskIndex
-	v.diskIndex++
 	return v
 }
 
 func (v *VMBuilder) ExistingDataVolume(dataVolumeName, diskBus string) *VMBuilder {
 	diskName := v.generateDiskName()
+	v.dataVolumeNames = append(v.dataVolumeNames, dataVolumeName)
 	// Disks
 	disks := v.vm.Spec.Template.Spec.Domain.Devices.Disks
 	disks = append(disks, kubevirtv1.Disk{
@@ -262,13 +252,10 @@ func (v *VMBuilder) ExistingDataVolume(dataVolumeName, diskBus string) *VMBuilde
 		},
 	})
 	v.vm.Spec.Template.Spec.Volumes = volumes
-	// diskIndex
-	v.diskIndex++
 	return v
 }
 
-func (v *VMBuilder) ContainerDisk(diskBus, imageName, ImagePullPolicy string, isCDRom bool) *VMBuilder {
-	diskName := v.generateDiskName()
+func (v *VMBuilder) ContainerDisk(diskName, diskBus, imageName, ImagePullPolicy string, isCDRom bool) *VMBuilder {
 	// Disks
 	disks := v.vm.Spec.Template.Spec.Domain.Devices.Disks
 	diskDevice := kubevirtv1.DiskDevice{
@@ -300,17 +287,15 @@ func (v *VMBuilder) ContainerDisk(diskBus, imageName, ImagePullPolicy string, is
 		},
 	})
 	v.vm.Spec.Template.Spec.Volumes = volumes
-	// diskIndex
-	v.diskIndex++
 	return v
 }
 
-func (v *VMBuilder) Container(diskBus, imageName, ImagePullPolicy string) *VMBuilder {
-	return v.ContainerDisk(diskBus, imageName, ImagePullPolicy, false)
+func (v *VMBuilder) Container(diskName, diskBus, imageName, ImagePullPolicy string) *VMBuilder {
+	return v.ContainerDisk(diskName, diskBus, imageName, ImagePullPolicy, false)
 }
 
-func (v *VMBuilder) CDRom(diskBus, imageName, ImagePullPolicy string) *VMBuilder {
-	return v.ContainerDisk(diskBus, imageName, ImagePullPolicy, true)
+func (v *VMBuilder) CDRom(diskName, diskBus, imageName, ImagePullPolicy string) *VMBuilder {
+	return v.ContainerDisk(diskName, diskBus, imageName, ImagePullPolicy, true)
 }
 
 func (v *VMBuilder) CloudInit(vmCloudInit *VMCloudInit) *VMBuilder {
@@ -360,8 +345,40 @@ func (v *VMBuilder) CloudInit(vmCloudInit *VMCloudInit) *VMBuilder {
 	return v
 }
 
-func (v *VMBuilder) Network(networkModel string) *VMBuilder {
-	networkName := v.generateNetworkName()
+func (v *VMBuilder) ManagementNetwork(bridge bool) *VMBuilder {
+	// Networks
+	networks := v.vm.Spec.Template.Spec.Networks
+	networks = append(networks, kubevirtv1.Network{
+		Name: defaultVMManagementNetworkName,
+		NetworkSource: kubevirtv1.NetworkSource{
+			Pod: &kubevirtv1.PodNetwork{},
+		},
+	})
+	v.vm.Spec.Template.Spec.Networks = networks
+	// Interfaces
+	interfaces := v.vm.Spec.Template.Spec.Domain.Devices.Interfaces
+	nic := kubevirtv1.Interface{
+		Name:  defaultVMManagementInterfaceName,
+		Model: defaultVMInterfaceModel,
+	}
+	if bridge {
+		nic.InterfaceBindingMethod = kubevirtv1.InterfaceBindingMethod{
+			Bridge: &kubevirtv1.InterfaceBridge{},
+		}
+	} else {
+		nic.InterfaceBindingMethod = kubevirtv1.InterfaceBindingMethod{
+			Masquerade: &kubevirtv1.InterfaceMasquerade{},
+		}
+	}
+	interfaces = append(interfaces, nic)
+
+	v.vm.Spec.Template.Spec.Domain.Devices.Interfaces = interfaces
+	return v
+}
+
+func (v *VMBuilder) Bridge(networkName, networkModel string) *VMBuilder {
+	nicName := v.generateNICName()
+	v.nicNames = append(v.nicNames, nicName)
 	// Networks
 	networks := v.vm.Spec.Template.Spec.Networks
 	networks = append(networks, kubevirtv1.Network{
@@ -377,24 +394,35 @@ func (v *VMBuilder) Network(networkModel string) *VMBuilder {
 	// Interfaces
 	interfaces := v.vm.Spec.Template.Spec.Domain.Devices.Interfaces
 	interfaces = append(interfaces, kubevirtv1.Interface{
-		Name:  networkName,
+		Name:  nicName,
 		Model: networkModel,
 		InterfaceBindingMethod: kubevirtv1.InterfaceBindingMethod{
 			Bridge: &kubevirtv1.InterfaceBridge{},
 		},
 	})
 	v.vm.Spec.Template.Spec.Domain.Devices.Interfaces = interfaces
-	// networkIndex
-	v.networkIndex++
 	return v
 }
 
 func (v *VMBuilder) Run() *apis.VirtualMachine {
 	v.vm.Spec.Running = pointer.BoolPtr(true)
-	return v.vm
+	return v.VM()
 }
 
 func (v *VMBuilder) VM() *apis.VirtualMachine {
+	if v.vm.Spec.Template.ObjectMeta.Annotations == nil {
+		v.vm.Spec.Template.ObjectMeta.Annotations = make(map[string]string)
+	}
+	sshNames, err := json.Marshal(v.sshNames)
+	if err != nil {
+		return v.vm
+	}
+	v.vm.Spec.Template.ObjectMeta.Annotations["harvester.cattle.io/sshNames"] = string(sshNames)
+	dataVolumeNames, err := json.Marshal(v.dataVolumeNames)
+	if err != nil {
+		return v.vm
+	}
+	v.vm.Spec.Template.ObjectMeta.Annotations["harvester.cattle.io/diskNames"] = string(dataVolumeNames)
 	return v.vm
 }
 
@@ -410,7 +438,7 @@ func NewServiceBuilder(vm *apis.VirtualMachine) *ServiceBuilder {
 	}
 }
 
-func (s *ServiceBuilder) Expose(name string, port int32) *ServiceBuilder {
+func (s *ServiceBuilder) Expose(name string, port int32, nodePort ...int32) *ServiceBuilder {
 	vm := s.vm
 	objectMeta := metav1.ObjectMeta{
 		Name:      fmt.Sprintf("%s-%s", vm.Name, name),
@@ -440,6 +468,9 @@ func (s *ServiceBuilder) Expose(name string, port int32) *ServiceBuilder {
 			Selector: vm.Spec.Template.ObjectMeta.Labels,
 			Type:     corev1.ServiceTypeNodePort,
 		},
+	}
+	if len(nodePort) != 0 {
+		svc.Spec.Ports[0].NodePort = nodePort[0]
 	}
 	s.services[name] = svc
 	return s

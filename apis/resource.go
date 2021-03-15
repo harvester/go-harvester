@@ -84,9 +84,10 @@ func (r *Resource) List() (respCode int, respBody []byte, err error) {
 	return
 }
 
-func (r *Resource) Get(namespacedName string) (respCode int, respBody []byte, err error) {
+func (r *Resource) Get(namespacedName string, obj ...interface{}) (respCode int, respBody []byte, err error) {
 	err = r.NewRequest().
 		GET(r.BuildResourceURL(namespacedName)).
+		SetQuery(obj...).
 		BindBody(&respBody).
 		Code(&respCode).
 		Debug(r.Debug).
@@ -105,9 +106,10 @@ func (r *Resource) Update(namespacedName string, object interface{}) (respCode i
 	return
 }
 
-func (r *Resource) Delete(namespacedName string) (respCode int, respBody []byte, err error) {
+func (r *Resource) Delete(namespacedName string, obj ...interface{}) (respCode int, respBody []byte, err error) {
 	err = r.NewRequest().
 		DELETE(r.BuildResourceURL(namespacedName)).
+		SetQuery(obj...).
 		BindBody(&respBody).
 		Code(&respCode).
 		Debug(r.Debug).
@@ -127,8 +129,4 @@ func (r *Resource) Action(namespacedName string, action string, object interface
 	}
 	err = dataFlow.Do()
 	return
-}
-
-func ResponseError(respCode int, respBody []byte) error {
-	return fmt.Errorf("respCode： %d, respBody: %s", respCode, string(respBody))
 }
