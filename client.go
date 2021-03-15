@@ -23,6 +23,7 @@ type Client struct {
 	Images                  *apis.ImagesAPI
 	Settings                *apis.SettingsAPI
 	KeyPairs                *apis.KeyPairsAPI
+	DataVolumes             *apis.DataVolumesAPI
 	VirtualMachines         *apis.VirtualMachinesAPI
 	VirtualMachineInstances *apis.VirtualMachineInstanceAPI
 	Nodes                   *apis.NodesAPI
@@ -72,6 +73,9 @@ func New(harvesterURL string, httpClient *http.Client) *Client {
 	}
 	c.KeyPairs = &apis.KeyPairsAPI{
 		Resource: NewService(c, "harvester.cattle.io.keypairs", false),
+	}
+	c.DataVolumes = &apis.DataVolumesAPI{
+		Resource: NewService(c, "cdi.kubevirt.io.datavolumes", false),
 	}
 	c.VirtualMachines = &apis.VirtualMachinesAPI{
 		Resource: NewService(c, "kubevirt.io.virtualmachines", false),
