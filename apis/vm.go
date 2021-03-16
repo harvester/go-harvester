@@ -55,7 +55,7 @@ func (s *VirtualMachinesAPI) Update(namespace, name string, obj *VirtualMachine)
 	if err != nil {
 		return nil, err
 	}
-	if respCode != http.StatusCreated {
+	if respCode != http.StatusOK {
 		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &created); err != nil {

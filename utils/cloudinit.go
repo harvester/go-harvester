@@ -38,6 +38,7 @@ network:
     subnets:
     - type: static
       address: %s
+      netmask: %s
       gateway: %s`
 )
 
@@ -47,6 +48,7 @@ type VMCloudInit struct {
 	PublicKey     string
 	InterfaceName string
 	Address       string
+	NetMask       string
 	Gateway       string
 }
 
@@ -64,8 +66,9 @@ func generateCloudInit(vmCloudInit *VMCloudInit) (userData string, networkData s
 		return
 	}
 	networkData = fmt.Sprintf(defaultCloudInitNetworkDataTemplate, vmCloudInit.InterfaceName)
-	if vmCloudInit.Address != "" && vmCloudInit.Gateway != "" {
-		networkData += fmt.Sprintf(defaultCloudInitNetworkDataStaticTemplate, vmCloudInit.Address, vmCloudInit.Gateway)
+
+	if vmCloudInit.Address != "" && vmCloudInit.Gateway != "" && vmCloudInit.NetMask != "" {
+		networkData += fmt.Sprintf(defaultCloudInitNetworkDataStaticTemplate, vmCloudInit.Address, vmCloudInit.NetMask, vmCloudInit.Gateway)
 	} else {
 		networkData += defaultCloudInitNetworkDataDHCPTemplate
 	}
@@ -76,29 +79,53 @@ func (v *VMBuilder) CloudInit(vmCloudInit *VMCloudInit) *VMBuilder {
 	if vmCloudInit == nil {
 		return v
 	}
+	userData, networkData := generateCloudInit(vmCloudInit)
 	diskName := "cloudinitdisk"
 	diskBus := "virtio"
 	// Disks
+	var (
+		diskExist bool
+		diskIndex int
+	)
 	disks := v.vm.Spec.Template.Spec.Domain.Devices.Disks
-	for _, disk := range disks {
+	for i, disk := range disks {
 		if disk.Name == diskName {
-			return v
+			diskExist = true
+			diskIndex = i
+			break
 		}
 	}
 
-	disks = append(disks, kubevirtv1.Disk{
+	disk := kubevirtv1.Disk{
 		Name: diskName,
 		DiskDevice: kubevirtv1.DiskDevice{
 			Disk: &kubevirtv1.DiskTarget{
 				Bus: diskBus,
 			},
 		},
-	})
+	}
+	if diskExist {
+		disks[diskIndex] = disk
+	} else {
+		disks = append(disks, disk)
+	}
+
 	v.vm.Spec.Template.Spec.Domain.Devices.Disks = disks
+
 	// Volumes
-	userData, networkData := generateCloudInit(vmCloudInit)
+	var (
+		volumeExist bool
+		volumeIndex int
+	)
 	volumes := v.vm.Spec.Template.Spec.Volumes
-	volumes = append(volumes, kubevirtv1.Volume{
+	for i, volume := range volumes {
+		if volume.Name == diskName {
+			volumeExist = true
+			volumeIndex = i
+			break
+		}
+	}
+	volume := kubevirtv1.Volume{
 		Name: diskName,
 		VolumeSource: kubevirtv1.VolumeSource{
 			CloudInitNoCloud: &kubevirtv1.CloudInitNoCloudSource{
@@ -106,7 +133,12 @@ func (v *VMBuilder) CloudInit(vmCloudInit *VMCloudInit) *VMBuilder {
 				NetworkData: networkData,
 			},
 		},
-	})
+	}
+	if volumeExist {
+		volumes[volumeIndex] = volume
+	} else {
+		volumes = append(volumes, volume)
+	}
 	v.vm.Spec.Template.Spec.Volumes = volumes
 	return v
 }

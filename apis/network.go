@@ -38,7 +38,7 @@ func (s *NetworksAPI) Create(obj *Network) (*Network, error) {
 	if err != nil {
 		return nil, err
 	}
-	if respCode != http.StatusCreated {
+	if respCode != http.StatusOK {
 		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &created); err != nil {

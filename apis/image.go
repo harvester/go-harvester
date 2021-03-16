@@ -54,7 +54,7 @@ func (s *ImagesAPI) Update(namespace, name string, obj *Image) (*Image, error) {
 	if err != nil {
 		return nil, err
 	}
-	if respCode != http.StatusCreated {
+	if respCode != http.StatusOK {
 		return nil, NewResponseError(respCode, respBody)
 	}
 	if err = json.Unmarshal(respBody, &created); err != nil {
