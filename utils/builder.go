@@ -27,6 +27,13 @@ const (
 	defaultVMManagementInterfaceName = "default"
 	defaultVMInterfaceModel          = "virtio"
 
+	defaultVMCloudInitUserDataFinalTemplate = `
+package_update: true
+packages:
+  - qemu-guest-agent
+# written to /var/log/cloud-init-output.log
+final_message: "The system is finally up, after $UPTIME seconds"
+`
 	defaultVMCloudInitUserDataPasswordTemplate = `
 user: %s
 password: %s
@@ -309,6 +316,7 @@ func generateCloudInit(vmCloudInit *VMCloudInit) (userData string, networkData s
 	if vmCloudInit.PublicKey != "" {
 		userData += fmt.Sprintf(defaultVMCloudInitUserDataSSHKeyTemplate, vmCloudInit.PublicKey)
 	}
+	userData += defaultVMCloudInitUserDataFinalTemplate
 	// networkData
 	if vmCloudInit.InterfaceName == "" {
 		return
