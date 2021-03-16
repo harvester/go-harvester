@@ -10,6 +10,11 @@ import (
 	"github.com/futuretea/go-harvester/apis"
 )
 
+type ServiceBuilder struct {
+	vm       *apis.VirtualMachine
+	services map[string]*apis.Service
+}
+
 func NewServiceBuilder(vm *apis.VirtualMachine) *ServiceBuilder {
 	return &ServiceBuilder{
 		vm:       vm,

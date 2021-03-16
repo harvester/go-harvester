@@ -122,7 +122,7 @@ func (v *VMBuilder) VM() *apis.VirtualMachine {
 	return v.vm
 }
 
-type ServiceBuilder struct {
-	vm       *apis.VirtualMachine
-	services map[string]*apis.Service
+func (v *VMBuilder) Update(vm *apis.VirtualMachine) *VMBuilder {
+	v.vm = vm
+	return v
 }
