@@ -28,24 +28,25 @@ const (
 	defaultVMInterfaceModel          = "virtio"
 
 	defaultVMCloudInitUserDataPasswordTemplate = `
-#cloud-config
 user: %s
 password: %s
 chpasswd: { expire: False }
 ssh_pwauth: True`
 
 	defaultVMCloudInitUserDataSSHKeyTemplate = `
-#cloud-config
 ssh_authorized_keys:
 - >-
   %s`
-
 	defaultVMCloudInitNetworkDataTemplate = `
 network:
   version: 1
   config:
   - type: physical
-    name: eth0
+    name: %s`
+	defaultVMCloudInitNetworkDataDHCPTemplate = `
+    subnets:
+    - type: dhcp`
+	defaultVMCloudInitNetworkDataStaticTemplate = `
     subnets:
     - type: static
       address: %s
@@ -53,11 +54,12 @@ network:
 )
 
 type VMCloudInit struct {
-	UserName  string
-	Password  string
-	PublicKey string
-	Address   string
-	Gateway   string
+	UserName      string
+	Password      string
+	PublicKey     string
+	InterfaceName string
+	Address       string
+	Gateway       string
 }
 
 type VMBuilder struct {
@@ -298,7 +300,32 @@ func (v *VMBuilder) CDRom(diskName, diskBus, imageName, ImagePullPolicy string) 
 	return v.ContainerDisk(diskName, diskBus, imageName, ImagePullPolicy, true)
 }
 
+func generateCloudInit(vmCloudInit *VMCloudInit) (userData string, networkData string) {
+	// userData
+	userData = "#cloud-config"
+	if vmCloudInit.Password != "" && vmCloudInit.UserName != "" {
+		userData += fmt.Sprintf(defaultVMCloudInitUserDataPasswordTemplate, vmCloudInit.UserName, vmCloudInit.Password)
+	}
+	if vmCloudInit.PublicKey != "" {
+		userData += fmt.Sprintf(defaultVMCloudInitUserDataSSHKeyTemplate, vmCloudInit.PublicKey)
+	}
+	// networkData
+	if vmCloudInit.InterfaceName == "" {
+		return
+	}
+	networkData = fmt.Sprintf(defaultVMCloudInitNetworkDataTemplate, vmCloudInit.InterfaceName)
+	if vmCloudInit.Address != "" && vmCloudInit.Gateway != "" {
+		networkData += fmt.Sprintf(defaultVMCloudInitNetworkDataStaticTemplate, vmCloudInit.Address, vmCloudInit.Gateway)
+	} else {
+		networkData += defaultVMCloudInitNetworkDataDHCPTemplate
+	}
+	return userData, networkData
+}
+
 func (v *VMBuilder) CloudInit(vmCloudInit *VMCloudInit) *VMBuilder {
+	if vmCloudInit == nil {
+		return v
+	}
 	diskName := "cloudinitdisk"
 	diskBus := "virtio"
 	// Disks
@@ -319,18 +346,7 @@ func (v *VMBuilder) CloudInit(vmCloudInit *VMCloudInit) *VMBuilder {
 	})
 	v.vm.Spec.Template.Spec.Domain.Devices.Disks = disks
 	// Volumes
-	var userData, networkData string
-	if vmCloudInit != nil {
-		if vmCloudInit.Password != "" {
-			userData = fmt.Sprintf(defaultVMCloudInitUserDataPasswordTemplate, vmCloudInit.UserName, vmCloudInit.Password)
-		}
-		if vmCloudInit.PublicKey != "" {
-			userData = fmt.Sprintf(defaultVMCloudInitUserDataSSHKeyTemplate, vmCloudInit.PublicKey)
-		}
-		if vmCloudInit.Address != "" && vmCloudInit.Gateway != "" {
-			networkData = fmt.Sprintf(defaultVMCloudInitNetworkDataTemplate, vmCloudInit.Address, vmCloudInit.Gateway)
-		}
-	}
+	userData, networkData := generateCloudInit(vmCloudInit)
 	volumes := v.vm.Spec.Template.Spec.Volumes
 	volumes = append(volumes, kubevirtv1.Volume{
 		Name: diskName,
