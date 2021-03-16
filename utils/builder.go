@@ -398,7 +398,7 @@ func (v *VMBuilder) Bridge(networkName, networkModel string) *VMBuilder {
 	// Networks
 	networks := v.vm.Spec.Template.Spec.Networks
 	networks = append(networks, kubevirtv1.Network{
-		Name: networkName,
+		Name: nicName,
 		NetworkSource: kubevirtv1.NetworkSource{
 			Multus: &kubevirtv1.MultusNetwork{
 				NetworkName: networkName,
