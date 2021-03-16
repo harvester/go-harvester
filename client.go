@@ -28,6 +28,7 @@ type Client struct {
 	VirtualMachineInstances *apis.VirtualMachineInstanceAPI
 	Nodes                   *apis.NodesAPI
 	SVCs                    *apis.ServicesAPI
+	Networks                *apis.NetworksAPI
 }
 
 func NewService(c *Client, pluralName string, public bool) *apis.Resource {
@@ -88,6 +89,9 @@ func New(harvesterURL string, httpClient *http.Client) *Client {
 	}
 	c.SVCs = &apis.ServicesAPI{
 		Resource: NewService(c, "services", false),
+	}
+	c.Networks = &apis.NetworksAPI{
+		Resource: NewService(c, "k8s.cni.cncf.io.network-attachment-definitions", false),
 	}
 	return c
 }
