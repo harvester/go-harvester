@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
+
+	"github.com/rancher/wrangler/pkg/slice"
 
 	"github.com/rancher/wrangler/pkg/schemas/validation"
 )
@@ -55,4 +58,28 @@ func CodeForError(err error) *validation.ErrorCode {
 
 func IsNotFound(err error) bool {
 	return CodeForError(err).Code == validation.NotFound.Code
+}
+
+func IsConflict(err error) bool {
+	return CodeForError(err).Code == validation.Conflict.Code
+}
+
+func RetryOnCodes(retryNum, retryInterval int64, process func() error, codes ...string) error {
+	for {
+		if err := process(); err != nil {
+			if retryNum == 0 {
+				return err
+			}
+
+			if !slice.ContainsString(codes, CodeForError(err).Code) {
+				return err
+			}
+			retryNum--
+			if retryInterval > 0 {
+				time.Sleep(time.Duration(retryInterval) * time.Second)
+			}
+			continue
+		}
+		return nil
+	}
 }
