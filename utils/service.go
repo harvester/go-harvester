@@ -22,7 +22,7 @@ func NewServiceBuilder(vm *apis.VirtualMachine) *ServiceBuilder {
 	}
 }
 
-func (s *ServiceBuilder) Expose(name string, port int32, nodePort ...int32) *ServiceBuilder {
+func (s *ServiceBuilder) Expose(name string, serviceType corev1.ServiceType, ports ...int32) *ServiceBuilder {
 	vm := s.vm
 	objectMeta := metav1.ObjectMeta{
 		Name:      fmt.Sprintf("%s-%s", vm.Name, name),
@@ -37,24 +37,24 @@ func (s *ServiceBuilder) Expose(name string, port int32, nodePort ...int32) *Ser
 			},
 		},
 	}
+	servicePorts := make([]corev1.ServicePort, 0, len(ports))
+	for _, port := range ports {
+		servicePort := corev1.ServicePort{
+			Name: fmt.Sprintf("%s-%d", name, port),
+			Port: port,
+			TargetPort: intstr.IntOrString{
+				IntVal: port,
+			},
+		}
+		servicePorts = append(servicePorts, servicePort)
+	}
 	svc := &apis.Service{
 		ObjectMeta: objectMeta,
 		Spec: corev1.ServiceSpec{
-			Ports: []corev1.ServicePort{
-				{
-					Name: name,
-					Port: port,
-					TargetPort: intstr.IntOrString{
-						IntVal: port,
-					},
-				},
-			},
+			Type:     serviceType,
+			Ports:    servicePorts,
 			Selector: vm.Spec.Template.ObjectMeta.Labels,
-			Type:     corev1.ServiceTypeNodePort,
 		},
-	}
-	if len(nodePort) != 0 {
-		svc.Spec.Ports[0].NodePort = nodePort[0]
 	}
 	s.services[name] = svc
 	return s
