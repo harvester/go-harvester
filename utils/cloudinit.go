@@ -1,84 +1,10 @@
 package utils
 
 import (
-	"fmt"
-
 	kubevirtv1 "kubevirt.io/client-go/api/v1"
 )
 
-const (
-	defaultCloudInitUserDataBasic = `#cloud-config
-package_update: true
-packages:
-- qemu-guest-agent
-runcmd:
-- [systemctl, enable, --now, qemu-guest-agent]
-`
-	defaultCloudInitUserDataPasswordTemplate = `
-user: %s
-password: %s
-chpasswd: { expire: False }
-ssh_pwauth: True`
-
-	defaultCloudInitUserDataSSHKeyTemplate = `
-ssh_authorized_keys:
-- >-
-  %s`
-	defaultCloudInitNetworkDataTemplate = `
-network:
-  version: 1
-  config:
-  - type: physical
-    name: %s`
-	defaultCloudInitNetworkDataDHCPTemplate = `
-    subnets:
-    - type: dhcp`
-	defaultCloudInitNetworkDataStaticTemplate = `
-    subnets:
-    - type: static
-      address: %s
-      netmask: %s
-      gateway: %s`
-)
-
-type VMCloudInit struct {
-	UserName      string
-	Password      string
-	PublicKey     string
-	InterfaceName string
-	Address       string
-	NetMask       string
-	Gateway       string
-}
-
-func generateCloudInit(vmCloudInit *VMCloudInit) (userData string, networkData string) {
-	// userData
-	userData = defaultCloudInitUserDataBasic
-	if vmCloudInit.Password != "" && vmCloudInit.UserName != "" {
-		userData += fmt.Sprintf(defaultCloudInitUserDataPasswordTemplate, vmCloudInit.UserName, vmCloudInit.Password)
-	}
-	if vmCloudInit.PublicKey != "" {
-		userData += fmt.Sprintf(defaultCloudInitUserDataSSHKeyTemplate, vmCloudInit.PublicKey)
-	}
-	// networkData
-	if vmCloudInit.InterfaceName == "" {
-		return
-	}
-	networkData = fmt.Sprintf(defaultCloudInitNetworkDataTemplate, vmCloudInit.InterfaceName)
-
-	if vmCloudInit.Address != "" && vmCloudInit.Gateway != "" && vmCloudInit.NetMask != "" {
-		networkData += fmt.Sprintf(defaultCloudInitNetworkDataStaticTemplate, vmCloudInit.Address, vmCloudInit.NetMask, vmCloudInit.Gateway)
-	} else {
-		networkData += defaultCloudInitNetworkDataDHCPTemplate
-	}
-	return userData, networkData
-}
-
-func (v *VMBuilder) CloudInit(vmCloudInit *VMCloudInit) *VMBuilder {
-	if vmCloudInit == nil {
-		return v
-	}
-	userData, networkData := generateCloudInit(vmCloudInit)
+func (v *VMBuilder) CloudInit(userData, networkData string) *VMBuilder {
 	diskName := "cloudinitdisk"
 	diskBus := "virtio"
 	// Disks
