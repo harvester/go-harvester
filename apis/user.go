@@ -15,11 +15,11 @@ type UserList struct {
 	Data []*User `json:"data"`
 }
 
-type UsersAPI struct {
+type UsersClient struct {
 	*Resource
 }
 
-func (s *UsersAPI) List() (*UserList, error) {
+func (s *UsersClient) List() (*UserList, error) {
 	var collection UserList
 	respCode, respBody, err := s.Resource.List()
 	if err != nil {
@@ -32,7 +32,7 @@ func (s *UsersAPI) List() (*UserList, error) {
 	return &collection, err
 }
 
-func (s *UsersAPI) Create(obj *User) (*User, error) {
+func (s *UsersClient) Create(obj *User) (*User, error) {
 	var created *User
 	respCode, respBody, err := s.Resource.Create(obj)
 	if err != nil {

@@ -15,11 +15,11 @@ type NetworkList struct {
 	Data []*Network `json:"data"`
 }
 
-type NetworksAPI struct {
+type NetworksClient struct {
 	*Resource
 }
 
-func (s *NetworksAPI) List() (*NetworkList, error) {
+func (s *NetworksClient) List() (*NetworkList, error) {
 	var collection NetworkList
 	respCode, respBody, err := s.Resource.List()
 	if err != nil {
@@ -32,7 +32,7 @@ func (s *NetworksAPI) List() (*NetworkList, error) {
 	return &collection, err
 }
 
-func (s *NetworksAPI) Create(obj *Network) (*Network, error) {
+func (s *NetworksClient) Create(obj *Network) (*Network, error) {
 	var created *Network
 	respCode, respBody, err := s.Resource.Create(obj)
 	if err != nil {
@@ -47,7 +47,7 @@ func (s *NetworksAPI) Create(obj *Network) (*Network, error) {
 	return created, nil
 }
 
-func (s *NetworksAPI) Update(namespace, name string, obj *Network) (*Network, error) {
+func (s *NetworksClient) Update(namespace, name string, obj *Network) (*Network, error) {
 	var created *Network
 	namespacedName := namespace + "/" + name
 	respCode, respBody, err := s.Resource.Update(namespacedName, obj)
@@ -63,7 +63,7 @@ func (s *NetworksAPI) Update(namespace, name string, obj *Network) (*Network, er
 	return created, nil
 }
 
-func (s *NetworksAPI) Get(namespace, name string) (*Network, error) {
+func (s *NetworksClient) Get(namespace, name string) (*Network, error) {
 	var obj *Network
 	namespacedName := namespace + "/" + name
 	respCode, respBody, err := s.Resource.Get(namespacedName)
@@ -79,7 +79,7 @@ func (s *NetworksAPI) Get(namespace, name string) (*Network, error) {
 	return obj, nil
 }
 
-func (s *NetworksAPI) Delete(namespace, name string) (*Network, error) {
+func (s *NetworksClient) Delete(namespace, name string) (*Network, error) {
 	var obj *Network
 	namespacedName := namespace + "/" + name
 	respCode, respBody, err := s.Resource.Delete(namespacedName)

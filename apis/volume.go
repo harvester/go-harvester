@@ -15,11 +15,11 @@ type DataVolumeList struct {
 	Data []*DataVolume `json:"data"`
 }
 
-type DataVolumesAPI struct {
+type DataVolumesClient struct {
 	*Resource
 }
 
-func (s *DataVolumesAPI) List() (*DataVolumeList, error) {
+func (s *DataVolumesClient) List() (*DataVolumeList, error) {
 	var collection DataVolumeList
 	respCode, respBody, err := s.Resource.List()
 	if err != nil {
@@ -32,7 +32,7 @@ func (s *DataVolumesAPI) List() (*DataVolumeList, error) {
 	return &collection, err
 }
 
-func (s *DataVolumesAPI) Create(obj *DataVolume) (*DataVolume, error) {
+func (s *DataVolumesClient) Create(obj *DataVolume) (*DataVolume, error) {
 	var created *DataVolume
 	respCode, respBody, err := s.Resource.Create(obj)
 	if err != nil {
@@ -47,7 +47,7 @@ func (s *DataVolumesAPI) Create(obj *DataVolume) (*DataVolume, error) {
 	return created, nil
 }
 
-func (s *DataVolumesAPI) Update(namespace, name string, obj *DataVolume) (*DataVolume, error) {
+func (s *DataVolumesClient) Update(namespace, name string, obj *DataVolume) (*DataVolume, error) {
 	var created *DataVolume
 	namespacedName := namespace + "/" + name
 	respCode, respBody, err := s.Resource.Update(namespacedName, obj)
@@ -63,7 +63,7 @@ func (s *DataVolumesAPI) Update(namespace, name string, obj *DataVolume) (*DataV
 	return created, nil
 }
 
-func (s *DataVolumesAPI) Get(namespace, name string) (*DataVolume, error) {
+func (s *DataVolumesClient) Get(namespace, name string) (*DataVolume, error) {
 	var obj *DataVolume
 	namespacedName := namespace + "/" + name
 	respCode, respBody, err := s.Resource.Get(namespacedName)
@@ -79,7 +79,7 @@ func (s *DataVolumesAPI) Get(namespace, name string) (*DataVolume, error) {
 	return obj, nil
 }
 
-func (s *DataVolumesAPI) Delete(namespace, name string) (*DataVolume, error) {
+func (s *DataVolumesClient) Delete(namespace, name string) (*DataVolume, error) {
 	var obj *DataVolume
 	namespacedName := namespace + "/" + name
 	respCode, respBody, err := s.Resource.Delete(namespacedName)

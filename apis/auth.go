@@ -6,11 +6,11 @@ import (
 	"github.com/guonaihong/gout"
 )
 
-type AuthAPI struct {
+type AuthClient struct {
 	*Resource
 }
 
-func (s *AuthAPI) Login(username, password string) error {
+func (s *AuthClient) Login(username, password string) error {
 	respCode, respBody, err := s.Resource.Action("", "login", gout.H{
 		"username": username,
 		"password": password,

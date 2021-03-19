@@ -18,17 +18,17 @@ type Client struct {
 	APIVersion string
 	BaseURL    *url.URL
 
-	Auth                    *apis.AuthAPI
-	Users                   *apis.UsersAPI
-	Images                  *apis.ImagesAPI
-	Settings                *apis.SettingsAPI
-	KeyPairs                *apis.KeyPairsAPI
-	DataVolumes             *apis.DataVolumesAPI
-	VirtualMachines         *apis.VirtualMachinesAPI
-	VirtualMachineInstances *apis.VirtualMachineInstanceAPI
-	Nodes                   *apis.NodesAPI
-	SVCs                    *apis.ServicesAPI
-	Networks                *apis.NetworksAPI
+	Auth                    *apis.AuthClient
+	Users                   *apis.UsersClient
+	Images                  *apis.ImagesClient
+	Settings                *apis.SettingsClient
+	KeyPairs                *apis.KeyPairsClient
+	DataVolumes             *apis.DataVolumesClient
+	VirtualMachines         *apis.VirtualMachinesClient
+	VirtualMachineInstances *apis.VirtualMachineInstanceClient
+	Nodes                   *apis.NodesClient
+	SVCs                    *apis.ServicesClient
+	Networks                *apis.NetworksClient
 }
 
 func NewService(c *Client, pluralName string, publicOptions ...bool) *apis.Resource {
@@ -64,37 +64,37 @@ func New(harvesterURL string, httpClient *http.Client) *Client {
 		APIVersion: defaultAPIVersion,
 		BaseURL:    baseURL,
 	}
-	c.Auth = &apis.AuthAPI{
+	c.Auth = &apis.AuthClient{
 		Resource: NewService(c, "auth", true),
 	}
-	c.Users = &apis.UsersAPI{
+	c.Users = &apis.UsersClient{
 		Resource: NewService(c, "harvester.cattle.io.users"),
 	}
-	c.Images = &apis.ImagesAPI{
+	c.Images = &apis.ImagesClient{
 		Resource: NewService(c, "harvester.cattle.io.virtualmachineimages"),
 	}
-	c.Settings = &apis.SettingsAPI{
+	c.Settings = &apis.SettingsClient{
 		Resource: NewService(c, "harvester.cattle.io.settings"),
 	}
-	c.KeyPairs = &apis.KeyPairsAPI{
+	c.KeyPairs = &apis.KeyPairsClient{
 		Resource: NewService(c, "harvester.cattle.io.keypairs"),
 	}
-	c.DataVolumes = &apis.DataVolumesAPI{
+	c.DataVolumes = &apis.DataVolumesClient{
 		Resource: NewService(c, "cdi.kubevirt.io.datavolumes"),
 	}
-	c.VirtualMachines = &apis.VirtualMachinesAPI{
+	c.VirtualMachines = &apis.VirtualMachinesClient{
 		Resource: NewService(c, "kubevirt.io.virtualmachines"),
 	}
-	c.VirtualMachineInstances = &apis.VirtualMachineInstanceAPI{
+	c.VirtualMachineInstances = &apis.VirtualMachineInstanceClient{
 		Resource: NewService(c, "kubevirt.io.virtualmachineinstance"),
 	}
-	c.Nodes = &apis.NodesAPI{
+	c.Nodes = &apis.NodesClient{
 		Resource: NewService(c, "nodes"),
 	}
-	c.SVCs = &apis.ServicesAPI{
+	c.SVCs = &apis.ServicesClient{
 		Resource: NewService(c, "services"),
 	}
-	c.Networks = &apis.NetworksAPI{
+	c.Networks = &apis.NetworksClient{
 		Resource: NewService(c, "k8s.cni.cncf.io.network-attachment-definitions"),
 	}
 	return c

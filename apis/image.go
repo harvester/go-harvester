@@ -15,11 +15,11 @@ type ImageList struct {
 	Data []*Image `json:"data"`
 }
 
-type ImagesAPI struct {
+type ImagesClient struct {
 	*Resource
 }
 
-func (s *ImagesAPI) List() (*ImageList, error) {
+func (s *ImagesClient) List() (*ImageList, error) {
 	var collection ImageList
 	respCode, respBody, err := s.Resource.List()
 	if err != nil {
@@ -32,7 +32,7 @@ func (s *ImagesAPI) List() (*ImageList, error) {
 	return &collection, err
 }
 
-func (s *ImagesAPI) Create(obj *Image) (*Image, error) {
+func (s *ImagesClient) Create(obj *Image) (*Image, error) {
 	var created *Image
 	respCode, respBody, err := s.Resource.Create(obj)
 	if err != nil {
@@ -47,7 +47,7 @@ func (s *ImagesAPI) Create(obj *Image) (*Image, error) {
 	return created, nil
 }
 
-func (s *ImagesAPI) Update(namespace, name string, obj *Image) (*Image, error) {
+func (s *ImagesClient) Update(namespace, name string, obj *Image) (*Image, error) {
 	var created *Image
 	namespacedName := namespace + "/" + name
 	respCode, respBody, err := s.Resource.Update(namespacedName, obj)
@@ -63,7 +63,7 @@ func (s *ImagesAPI) Update(namespace, name string, obj *Image) (*Image, error) {
 	return created, nil
 }
 
-func (s *ImagesAPI) Get(namespace, name string) (*Image, error) {
+func (s *ImagesClient) Get(namespace, name string) (*Image, error) {
 	var obj *Image
 	namespacedName := namespace + "/" + name
 	respCode, respBody, err := s.Resource.Get(namespacedName)
@@ -79,7 +79,7 @@ func (s *ImagesAPI) Get(namespace, name string) (*Image, error) {
 	return obj, nil
 }
 
-func (s *ImagesAPI) Delete(namespace, name string) (*Image, error) {
+func (s *ImagesClient) Delete(namespace, name string) (*Image, error) {
 	var obj *Image
 	namespacedName := namespace + "/" + name
 	respCode, respBody, err := s.Resource.Delete(namespacedName)

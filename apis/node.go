@@ -15,11 +15,11 @@ type NodeList struct {
 	Data []*Node `json:"data"`
 }
 
-type NodesAPI struct {
+type NodesClient struct {
 	*Resource
 }
 
-func (s *NodesAPI) List() (*NodeList, error) {
+func (s *NodesClient) List() (*NodeList, error) {
 	var collection NodeList
 	respCode, respBody, err := s.Resource.List()
 	if err != nil {
@@ -32,7 +32,7 @@ func (s *NodesAPI) List() (*NodeList, error) {
 	return &collection, err
 }
 
-func (s *NodesAPI) Get(name string) (*Node, error) {
+func (s *NodesClient) Get(name string) (*Node, error) {
 	var obj *Node
 	respCode, respBody, err := s.Resource.Get(name)
 	if err != nil {

@@ -15,11 +15,11 @@ type VirtualMachineInstanceList struct {
 	Data []*VirtualMachineInstance `json:"data"`
 }
 
-type VirtualMachineInstanceAPI struct {
+type VirtualMachineInstanceClient struct {
 	*Resource
 }
 
-func (s *VirtualMachineInstanceAPI) List() (*VirtualMachineInstanceList, error) {
+func (s *VirtualMachineInstanceClient) List() (*VirtualMachineInstanceList, error) {
 	var collection VirtualMachineInstanceList
 	respCode, respBody, err := s.Resource.List()
 	if err != nil {
@@ -32,7 +32,7 @@ func (s *VirtualMachineInstanceAPI) List() (*VirtualMachineInstanceList, error) 
 	return &collection, err
 }
 
-func (s *VirtualMachineInstanceAPI) Get(namespace, name string) (*VirtualMachineInstance, error) {
+func (s *VirtualMachineInstanceClient) Get(namespace, name string) (*VirtualMachineInstance, error) {
 	var obj *VirtualMachineInstance
 	namespacedName := namespace + "/" + name
 	respCode, respBody, err := s.Resource.Get(namespacedName)

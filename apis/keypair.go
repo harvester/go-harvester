@@ -15,11 +15,11 @@ type KeyPairList struct {
 	Data []*KeyPair `json:"data"`
 }
 
-type KeyPairsAPI struct {
+type KeyPairsClient struct {
 	*Resource
 }
 
-func (s *KeyPairsAPI) List() (*KeyPairList, error) {
+func (s *KeyPairsClient) List() (*KeyPairList, error) {
 	var collection KeyPairList
 	respCode, respBody, err := s.Resource.List()
 	if err != nil {
@@ -32,7 +32,7 @@ func (s *KeyPairsAPI) List() (*KeyPairList, error) {
 	return &collection, err
 }
 
-func (s *KeyPairsAPI) Create(obj *KeyPair) (*KeyPair, error) {
+func (s *KeyPairsClient) Create(obj *KeyPair) (*KeyPair, error) {
 	var created *KeyPair
 	respCode, respBody, err := s.Resource.Create(obj)
 	if err != nil {
@@ -47,7 +47,7 @@ func (s *KeyPairsAPI) Create(obj *KeyPair) (*KeyPair, error) {
 	return created, nil
 }
 
-func (s *KeyPairsAPI) Update(namespace, name string, obj *KeyPair) (*KeyPair, error) {
+func (s *KeyPairsClient) Update(namespace, name string, obj *KeyPair) (*KeyPair, error) {
 	var created *KeyPair
 	namespacedName := namespace + "/" + name
 	respCode, respBody, err := s.Resource.Update(namespacedName, obj)
@@ -63,7 +63,7 @@ func (s *KeyPairsAPI) Update(namespace, name string, obj *KeyPair) (*KeyPair, er
 	return created, nil
 }
 
-func (s *KeyPairsAPI) Get(namespace, name string) (*KeyPair, error) {
+func (s *KeyPairsClient) Get(namespace, name string) (*KeyPair, error) {
 	var obj *KeyPair
 	namespacedName := namespace + "/" + name
 	respCode, respBody, err := s.Resource.Get(namespacedName)
@@ -79,7 +79,7 @@ func (s *KeyPairsAPI) Get(namespace, name string) (*KeyPair, error) {
 	return obj, nil
 }
 
-func (s *KeyPairsAPI) Delete(namespace, name string) (*KeyPair, error) {
+func (s *KeyPairsClient) Delete(namespace, name string) (*KeyPair, error) {
 	var obj *KeyPair
 	namespacedName := namespace + "/" + name
 	respCode, respBody, err := s.Resource.Delete(namespacedName)

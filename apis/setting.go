@@ -15,11 +15,11 @@ type SettingList struct {
 	Data []*Setting `json:"data"`
 }
 
-type SettingsAPI struct {
+type SettingsClient struct {
 	*Resource
 }
 
-func (s *SettingsAPI) List() (*SettingList, error) {
+func (s *SettingsClient) List() (*SettingList, error) {
 	var collection SettingList
 	respCode, respBody, err := s.Resource.List()
 	if err != nil {
@@ -32,7 +32,7 @@ func (s *SettingsAPI) List() (*SettingList, error) {
 	return &collection, err
 }
 
-func (s *SettingsAPI) Create(obj *Setting) (*Setting, error) {
+func (s *SettingsClient) Create(obj *Setting) (*Setting, error) {
 	var created *Setting
 	respCode, respBody, err := s.Resource.Create(obj)
 	if err != nil {
@@ -47,7 +47,7 @@ func (s *SettingsAPI) Create(obj *Setting) (*Setting, error) {
 	return created, nil
 }
 
-func (s *SettingsAPI) Update(name string, obj *Setting) (*Setting, error) {
+func (s *SettingsClient) Update(name string, obj *Setting) (*Setting, error) {
 	var created *Setting
 	respCode, respBody, err := s.Resource.Update(name, obj)
 	if err != nil {
@@ -62,7 +62,7 @@ func (s *SettingsAPI) Update(name string, obj *Setting) (*Setting, error) {
 	return created, nil
 }
 
-func (s *SettingsAPI) Get(name string) (*Setting, error) {
+func (s *SettingsClient) Get(name string) (*Setting, error) {
 	var obj *Setting
 	respCode, respBody, err := s.Resource.Get(name)
 	if err != nil {
@@ -77,7 +77,7 @@ func (s *SettingsAPI) Get(name string) (*Setting, error) {
 	return obj, nil
 }
 
-func (s *SettingsAPI) Delete(name string) (*Setting, error) {
+func (s *SettingsClient) Delete(name string) (*Setting, error) {
 	var obj *Setting
 	respCode, respBody, err := s.Resource.Delete(name)
 	if err != nil {

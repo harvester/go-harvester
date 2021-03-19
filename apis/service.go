@@ -15,11 +15,11 @@ type SVCList struct {
 	Data []*Service `json:"data"`
 }
 
-type ServicesAPI struct {
+type ServicesClient struct {
 	*Resource
 }
 
-func (s *ServicesAPI) List() (*SVCList, error) {
+func (s *ServicesClient) List() (*SVCList, error) {
 	var collection SVCList
 	respCode, respBody, err := s.Resource.List()
 	if err != nil {
@@ -32,7 +32,7 @@ func (s *ServicesAPI) List() (*SVCList, error) {
 	return &collection, err
 }
 
-func (s *ServicesAPI) Get(name string) (*Service, error) {
+func (s *ServicesClient) Get(name string) (*Service, error) {
 	var obj *Service
 	respCode, respBody, err := s.Resource.Get(name)
 	if err != nil {
@@ -47,7 +47,7 @@ func (s *ServicesAPI) Get(name string) (*Service, error) {
 	return obj, nil
 }
 
-func (s *ServicesAPI) Create(obj *Service) (*Service, error) {
+func (s *ServicesClient) Create(obj *Service) (*Service, error) {
 	var created *Service
 	respCode, respBody, err := s.Resource.Create(obj)
 	if err != nil {
@@ -62,7 +62,7 @@ func (s *ServicesAPI) Create(obj *Service) (*Service, error) {
 	return created, nil
 }
 
-func (s *ServicesAPI) Delete(namespace, name string) (*Service, error) {
+func (s *ServicesClient) Delete(namespace, name string) (*Service, error) {
 	var obj *Service
 	namespacedName := namespace + "/" + name
 	respCode, respBody, err := s.Resource.Delete(namespacedName)
