@@ -9,15 +9,15 @@ import (
 	kubevirtv1 "kubevirt.io/client-go/api/v1"
 )
 
-type VirtualMachinesAPI struct {
-	*Resource
-}
-
 type VirtualMachine kubevirtv1.VirtualMachine
 
 type VirtualMachineList struct {
 	types.Collection
 	Data []*VirtualMachine `json:"data"`
+}
+
+type VirtualMachinesAPI struct {
+	*Resource
 }
 
 func (s *VirtualMachinesAPI) List() (*VirtualMachineList, error) {

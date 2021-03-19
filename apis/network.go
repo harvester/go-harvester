@@ -8,15 +8,15 @@ import (
 	"github.com/rancher/apiserver/pkg/types"
 )
 
-type NetworksAPI struct {
-	*Resource
-}
-
 type Network cniv1.NetworkAttachmentDefinition
 
 type NetworkList struct {
 	types.Collection
 	Data []*Network `json:"data"`
+}
+
+type NetworksAPI struct {
+	*Resource
 }
 
 func (s *NetworksAPI) List() (*NetworkList, error) {

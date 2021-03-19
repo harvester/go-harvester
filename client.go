@@ -31,7 +31,11 @@ type Client struct {
 	Networks                *apis.NetworksAPI
 }
 
-func NewService(c *Client, pluralName string, public bool) *apis.Resource {
+func NewService(c *Client, pluralName string, publicOptions ...bool) *apis.Resource {
+	var public bool
+	if len(publicOptions) > 0 {
+		public = publicOptions[0]
+	}
 	return &apis.Resource{
 		PluralName: pluralName,
 		Public:     public,
@@ -64,34 +68,34 @@ func New(harvesterURL string, httpClient *http.Client) *Client {
 		Resource: NewService(c, "auth", true),
 	}
 	c.Users = &apis.UsersAPI{
-		Resource: NewService(c, "harvester.cattle.io.users", false),
+		Resource: NewService(c, "harvester.cattle.io.users"),
 	}
 	c.Images = &apis.ImagesAPI{
-		Resource: NewService(c, "harvester.cattle.io.virtualmachineimages", false),
+		Resource: NewService(c, "harvester.cattle.io.virtualmachineimages"),
 	}
 	c.Settings = &apis.SettingsAPI{
-		Resource: NewService(c, "harvester.cattle.io.settings", false),
+		Resource: NewService(c, "harvester.cattle.io.settings"),
 	}
 	c.KeyPairs = &apis.KeyPairsAPI{
-		Resource: NewService(c, "harvester.cattle.io.keypairs", false),
+		Resource: NewService(c, "harvester.cattle.io.keypairs"),
 	}
 	c.DataVolumes = &apis.DataVolumesAPI{
-		Resource: NewService(c, "cdi.kubevirt.io.datavolumes", false),
+		Resource: NewService(c, "cdi.kubevirt.io.datavolumes"),
 	}
 	c.VirtualMachines = &apis.VirtualMachinesAPI{
-		Resource: NewService(c, "kubevirt.io.virtualmachines", false),
+		Resource: NewService(c, "kubevirt.io.virtualmachines"),
 	}
 	c.VirtualMachineInstances = &apis.VirtualMachineInstanceAPI{
-		Resource: NewService(c, "kubevirt.io.virtualmachineinstance", false),
+		Resource: NewService(c, "kubevirt.io.virtualmachineinstance"),
 	}
 	c.Nodes = &apis.NodesAPI{
-		Resource: NewService(c, "nodes", false),
+		Resource: NewService(c, "nodes"),
 	}
 	c.SVCs = &apis.ServicesAPI{
-		Resource: NewService(c, "services", false),
+		Resource: NewService(c, "services"),
 	}
 	c.Networks = &apis.NetworksAPI{
-		Resource: NewService(c, "k8s.cni.cncf.io.network-attachment-definitions", false),
+		Resource: NewService(c, "k8s.cni.cncf.io.network-attachment-definitions"),
 	}
 	return c
 }

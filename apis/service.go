@@ -8,15 +8,15 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
-type ServicesAPI struct {
-	*Resource
-}
-
 type Service corev1.Service
 
 type SVCList struct {
 	types.Collection
 	Data []*Service `json:"data"`
+}
+
+type ServicesAPI struct {
+	*Resource
 }
 
 func (s *ServicesAPI) List() (*SVCList, error) {

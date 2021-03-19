@@ -8,15 +8,15 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
-type NodesAPI struct {
-	*Resource
-}
-
 type Node corev1.Node
 
 type NodeList struct {
 	types.Collection
 	Data []*Node `json:"data"`
+}
+
+type NodesAPI struct {
+	*Resource
 }
 
 func (s *NodesAPI) List() (*NodeList, error) {

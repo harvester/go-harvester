@@ -8,15 +8,15 @@ import (
 	harv1 "github.com/rancher/harvester/pkg/apis/harvester.cattle.io/v1alpha1"
 )
 
-type KeyPairsAPI struct {
-	*Resource
-}
-
 type KeyPair harv1.KeyPair
 
 type KeyPairList struct {
 	types.Collection
 	Data []*KeyPair `json:"data"`
+}
+
+type KeyPairsAPI struct {
+	*Resource
 }
 
 func (s *KeyPairsAPI) List() (*KeyPairList, error) {

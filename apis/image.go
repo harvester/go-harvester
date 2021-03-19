@@ -8,15 +8,15 @@ import (
 	harv1 "github.com/rancher/harvester/pkg/apis/harvester.cattle.io/v1alpha1"
 )
 
-type ImagesAPI struct {
-	*Resource
-}
-
 type Image harv1.VirtualMachineImage
 
 type ImageList struct {
 	types.Collection
 	Data []*Image `json:"data"`
+}
+
+type ImagesAPI struct {
+	*Resource
 }
 
 func (s *ImagesAPI) List() (*ImageList, error) {

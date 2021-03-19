@@ -8,15 +8,15 @@ import (
 	cdiv1beta1 "kubevirt.io/containerized-data-importer/pkg/apis/core/v1beta1"
 )
 
-type DataVolumesAPI struct {
-	*Resource
-}
-
 type DataVolume cdiv1beta1.DataVolume
 
 type DataVolumeList struct {
 	types.Collection
 	Data []*DataVolume `json:"data"`
+}
+
+type DataVolumesAPI struct {
+	*Resource
 }
 
 func (s *DataVolumesAPI) List() (*DataVolumeList, error) {

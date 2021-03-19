@@ -8,15 +8,15 @@ import (
 	harv1 "github.com/rancher/harvester/pkg/apis/harvester.cattle.io/v1alpha1"
 )
 
-type SettingsAPI struct {
-	*Resource
-}
-
 type Setting harv1.Setting
 
 type SettingList struct {
 	types.Collection
 	Data []*Setting `json:"data"`
+}
+
+type SettingsAPI struct {
+	*Resource
 }
 
 func (s *SettingsAPI) List() (*SettingList, error) {

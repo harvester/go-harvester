@@ -8,15 +8,15 @@ import (
 	harv1 "github.com/rancher/harvester/pkg/apis/harvester.cattle.io/v1alpha1"
 )
 
-type UsersAPI struct {
-	*Resource
-}
-
 type User harv1.User
 
 type UserList struct {
 	types.Collection
 	Data []*User `json:"data"`
+}
+
+type UsersAPI struct {
+	*Resource
 }
 
 func (s *UsersAPI) List() (*UserList, error) {
