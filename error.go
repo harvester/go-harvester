@@ -1,4 +1,4 @@
-package apis
+package goharv
 
 import (
 	"encoding/json"

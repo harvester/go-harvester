@@ -1,27 +1,33 @@
-package apis
+package goharv
 
 import (
 	"encoding/json"
 	"net/http"
 
 	"github.com/rancher/apiserver/pkg/types"
-	harv1 "github.com/rancher/harvester/pkg/apis/harvester.cattle.io/v1alpha1"
+	cdiv1beta1 "kubevirt.io/containerized-data-importer/pkg/apis/core/v1beta1"
 )
 
-type Image harv1.VirtualMachineImage
+type DataVolume cdiv1beta1.DataVolume
 
-type ImageList struct {
+type DataVolumeList struct {
 	types.Collection
-	Data []*Image `json:"data"`
+	Data []*DataVolume `json:"data"`
 }
 
-type ImagesClient struct {
-	*Resource
+type DataVolumesClient struct {
+	*apiClient
 }
 
-func (s *ImagesClient) List() (*ImageList, error) {
-	var collection ImageList
-	respCode, respBody, err := s.Resource.List()
+func newDataVolumesClient(c *Client) *DataVolumesClient {
+	return &DataVolumesClient{
+		apiClient: newAPIClient(c, "cdi.kubevirt.io.datavolumes"),
+	}
+}
+
+func (s *DataVolumesClient) List() (*DataVolumeList, error) {
+	var collection DataVolumeList
+	respCode, respBody, err := s.apiClient.List()
 	if err != nil {
 		return nil, err
 	}
@@ -32,9 +38,9 @@ func (s *ImagesClient) List() (*ImageList, error) {
 	return &collection, err
 }
 
-func (s *ImagesClient) Create(obj *Image) (*Image, error) {
-	var created *Image
-	respCode, respBody, err := s.Resource.Create(obj)
+func (s *DataVolumesClient) Create(obj *DataVolume) (*DataVolume, error) {
+	var created *DataVolume
+	respCode, respBody, err := s.apiClient.Create(obj)
 	if err != nil {
 		return nil, err
 	}
@@ -47,10 +53,10 @@ func (s *ImagesClient) Create(obj *Image) (*Image, error) {
 	return created, nil
 }
 
-func (s *ImagesClient) Update(namespace, name string, obj *Image) (*Image, error) {
-	var created *Image
+func (s *DataVolumesClient) Update(namespace, name string, obj *DataVolume) (*DataVolume, error) {
+	var created *DataVolume
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Update(namespacedName, obj)
+	respCode, respBody, err := s.apiClient.Update(namespacedName, obj)
 	if err != nil {
 		return nil, err
 	}
@@ -63,10 +69,10 @@ func (s *ImagesClient) Update(namespace, name string, obj *Image) (*Image, error
 	return created, nil
 }
 
-func (s *ImagesClient) Get(namespace, name string) (*Image, error) {
-	var obj *Image
+func (s *DataVolumesClient) Get(namespace, name string) (*DataVolume, error) {
+	var obj *DataVolume
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Get(namespacedName)
+	respCode, respBody, err := s.apiClient.Get(namespacedName)
 	if err != nil {
 		return nil, err
 	}
@@ -79,10 +85,10 @@ func (s *ImagesClient) Get(namespace, name string) (*Image, error) {
 	return obj, nil
 }
 
-func (s *ImagesClient) Delete(namespace, name string) (*Image, error) {
-	var obj *Image
+func (s *DataVolumesClient) Delete(namespace, name string) (*DataVolume, error) {
+	var obj *DataVolume
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Delete(namespacedName)
+	respCode, respBody, err := s.apiClient.Delete(namespacedName)
 	if err != nil {
 		return nil, err
 	}

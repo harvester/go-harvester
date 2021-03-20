@@ -1,27 +1,33 @@
-package apis
+package goharv
 
 import (
 	"encoding/json"
 	"net/http"
 
+	cniv1 "github.com/k8snetworkplumbingwg/network-attachment-definition-client/pkg/apis/k8s.cni.cncf.io/v1"
 	"github.com/rancher/apiserver/pkg/types"
-	harv1 "github.com/rancher/harvester/pkg/apis/harvester.cattle.io/v1alpha1"
 )
 
-type KeyPair harv1.KeyPair
+type Network cniv1.NetworkAttachmentDefinition
 
-type KeyPairList struct {
+type NetworkList struct {
 	types.Collection
-	Data []*KeyPair `json:"data"`
+	Data []*Network `json:"data"`
 }
 
-type KeyPairsClient struct {
-	*Resource
+type NetworksClient struct {
+	*apiClient
 }
 
-func (s *KeyPairsClient) List() (*KeyPairList, error) {
-	var collection KeyPairList
-	respCode, respBody, err := s.Resource.List()
+func newNetworksClient(c *Client) *NetworksClient {
+	return &NetworksClient{
+		apiClient: newAPIClient(c, "k8s.cni.cncf.io.network-attachment-definitions"),
+	}
+}
+
+func (s *NetworksClient) List() (*NetworkList, error) {
+	var collection NetworkList
+	respCode, respBody, err := s.apiClient.List()
 	if err != nil {
 		return nil, err
 	}
@@ -32,9 +38,25 @@ func (s *KeyPairsClient) List() (*KeyPairList, error) {
 	return &collection, err
 }
 
-func (s *KeyPairsClient) Create(obj *KeyPair) (*KeyPair, error) {
-	var created *KeyPair
-	respCode, respBody, err := s.Resource.Create(obj)
+func (s *NetworksClient) Create(obj *Network) (*Network, error) {
+	var created *Network
+	respCode, respBody, err := s.apiClient.Create(obj)
+	if err != nil {
+		return nil, err
+	}
+	if respCode != http.StatusOK {
+		return nil, NewResponseError(respCode, respBody)
+	}
+	if err = json.Unmarshal(respBody, &created); err != nil {
+		return nil, err
+	}
+	return created, nil
+}
+
+func (s *NetworksClient) Update(namespace, name string, obj *Network) (*Network, error) {
+	var created *Network
+	namespacedName := namespace + "/" + name
+	respCode, respBody, err := s.apiClient.Update(namespacedName, obj)
 	if err != nil {
 		return nil, err
 	}
@@ -47,26 +69,10 @@ func (s *KeyPairsClient) Create(obj *KeyPair) (*KeyPair, error) {
 	return created, nil
 }
 
-func (s *KeyPairsClient) Update(namespace, name string, obj *KeyPair) (*KeyPair, error) {
-	var created *KeyPair
+func (s *NetworksClient) Get(namespace, name string) (*Network, error) {
+	var obj *Network
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Update(namespacedName, obj)
-	if err != nil {
-		return nil, err
-	}
-	if respCode != http.StatusOK {
-		return nil, NewResponseError(respCode, respBody)
-	}
-	if err = json.Unmarshal(respBody, &created); err != nil {
-		return nil, err
-	}
-	return created, nil
-}
-
-func (s *KeyPairsClient) Get(namespace, name string) (*KeyPair, error) {
-	var obj *KeyPair
-	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Get(namespacedName)
+	respCode, respBody, err := s.apiClient.Get(namespacedName)
 	if err != nil {
 		return nil, err
 	}
@@ -79,10 +85,10 @@ func (s *KeyPairsClient) Get(namespace, name string) (*KeyPair, error) {
 	return obj, nil
 }
 
-func (s *KeyPairsClient) Delete(namespace, name string) (*KeyPair, error) {
-	var obj *KeyPair
+func (s *NetworksClient) Delete(namespace, name string) (*Network, error) {
+	var obj *Network
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Delete(namespacedName)
+	respCode, respBody, err := s.apiClient.Delete(namespacedName)
 	if err != nil {
 		return nil, err
 	}

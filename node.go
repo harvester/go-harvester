@@ -1,4 +1,4 @@
-package apis
+package goharv
 
 import (
 	"encoding/json"
@@ -16,12 +16,18 @@ type NodeList struct {
 }
 
 type NodesClient struct {
-	*Resource
+	*apiClient
+}
+
+func newNodesClient(c *Client) *NodesClient {
+	return &NodesClient{
+		apiClient: newAPIClient(c, "nodes"),
+	}
 }
 
 func (s *NodesClient) List() (*NodeList, error) {
 	var collection NodeList
-	respCode, respBody, err := s.Resource.List()
+	respCode, respBody, err := s.apiClient.List()
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +40,7 @@ func (s *NodesClient) List() (*NodeList, error) {
 
 func (s *NodesClient) Get(name string) (*Node, error) {
 	var obj *Node
-	respCode, respBody, err := s.Resource.Get(name)
+	respCode, respBody, err := s.apiClient.Get(name)
 	if err != nil {
 		return nil, err
 	}

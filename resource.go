@@ -1,4 +1,4 @@
-package apis
+package goharv
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
-type Resource struct {
+type apiClient struct {
 	Public     bool
 	Debug      bool
 	BaseURL    *url.URL
@@ -19,7 +19,7 @@ type Resource struct {
 	HTTPClient *http.Client
 }
 
-func (r *Resource) BuildAPIURL() string {
+func (r *apiClient) BuildAPIURL() string {
 	apiVersion := r.APIVersion
 	if r.Public {
 		apiVersion += "-public"
@@ -27,18 +27,18 @@ func (r *Resource) BuildAPIURL() string {
 	return fmt.Sprintf("%s/%s/%s", r.BaseURL, apiVersion, r.PluralName)
 }
 
-func (r *Resource) BuildResourceURL(namespacedName string) string {
+func (r *apiClient) BuildResourceURL(namespacedName string) string {
 	if namespacedName == "" {
 		return r.BuildAPIURL()
 	}
 	return fmt.Sprintf("%s/%s", r.BuildAPIURL(), namespacedName)
 }
 
-func (r *Resource) NewRequest() *dataflow.Gout {
+func (r *apiClient) NewRequest() *dataflow.Gout {
 	return gout.New(r.HTTPClient)
 }
 
-func (r *Resource) Create(object interface{}) (respCode int, respBody []byte, err error) {
+func (r *apiClient) Create(object interface{}) (respCode int, respBody []byte, err error) {
 	err = r.NewRequest().
 		POST(r.BuildAPIURL()).
 		SetJSON(object).
@@ -50,7 +50,7 @@ func (r *Resource) Create(object interface{}) (respCode int, respBody []byte, er
 	return
 }
 
-func (r *Resource) CreateByYAML(object interface{}) (respCode int, respBody []byte, err error) {
+func (r *apiClient) CreateByYAML(object interface{}) (respCode int, respBody []byte, err error) {
 	var yamlData []byte
 	yamlData, err = yaml.Marshal(object)
 	if err != nil {
@@ -68,7 +68,7 @@ func (r *Resource) CreateByYAML(object interface{}) (respCode int, respBody []by
 	return
 }
 
-func (r *Resource) List() (respCode int, respBody []byte, err error) {
+func (r *apiClient) List() (respCode int, respBody []byte, err error) {
 	err = r.NewRequest().
 		GET(r.BuildAPIURL()).
 		BindBody(&respBody).
@@ -84,7 +84,7 @@ func (r *Resource) List() (respCode int, respBody []byte, err error) {
 	return
 }
 
-func (r *Resource) Get(namespacedName string, obj ...interface{}) (respCode int, respBody []byte, err error) {
+func (r *apiClient) Get(namespacedName string, obj ...interface{}) (respCode int, respBody []byte, err error) {
 	err = r.NewRequest().
 		GET(r.BuildResourceURL(namespacedName)).
 		SetQuery(obj...).
@@ -95,7 +95,7 @@ func (r *Resource) Get(namespacedName string, obj ...interface{}) (respCode int,
 	return
 }
 
-func (r *Resource) Update(namespacedName string, object interface{}) (respCode int, respBody []byte, err error) {
+func (r *apiClient) Update(namespacedName string, object interface{}) (respCode int, respBody []byte, err error) {
 	err = r.NewRequest().
 		PUT(r.BuildResourceURL(namespacedName)).
 		SetJSON(object).
@@ -106,7 +106,7 @@ func (r *Resource) Update(namespacedName string, object interface{}) (respCode i
 	return
 }
 
-func (r *Resource) Delete(namespacedName string, obj ...interface{}) (respCode int, respBody []byte, err error) {
+func (r *apiClient) Delete(namespacedName string, obj ...interface{}) (respCode int, respBody []byte, err error) {
 	err = r.NewRequest().
 		DELETE(r.BuildResourceURL(namespacedName)).
 		SetQuery(obj...).
@@ -117,7 +117,7 @@ func (r *Resource) Delete(namespacedName string, obj ...interface{}) (respCode i
 	return
 }
 
-func (r *Resource) Action(namespacedName string, action string, object interface{}) (respCode int, respBody []byte, err error) {
+func (r *apiClient) Action(namespacedName string, action string, object interface{}) (respCode int, respBody []byte, err error) {
 	dataFlow := r.NewRequest().
 		POST(fmt.Sprintf("%s?action=%s", r.BuildResourceURL(namespacedName), action)).
 		SetHeader().

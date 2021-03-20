@@ -1,4 +1,4 @@
-package apis
+package goharv
 
 import (
 	"encoding/json"
@@ -17,12 +17,18 @@ type VirtualMachineList struct {
 }
 
 type VirtualMachinesClient struct {
-	*Resource
+	*apiClient
+}
+
+func newVirtualMachinesClient(c *Client) *VirtualMachinesClient {
+	return &VirtualMachinesClient{
+		apiClient: newAPIClient(c, "kubevirt.io.virtualmachines"),
+	}
 }
 
 func (s *VirtualMachinesClient) List() (*VirtualMachineList, error) {
 	var collection VirtualMachineList
-	respCode, respBody, err := s.Resource.List()
+	respCode, respBody, err := s.apiClient.List()
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +41,7 @@ func (s *VirtualMachinesClient) List() (*VirtualMachineList, error) {
 
 func (s *VirtualMachinesClient) Create(obj *VirtualMachine) (*VirtualMachine, error) {
 	var created *VirtualMachine
-	respCode, respBody, err := s.Resource.Create(obj)
+	respCode, respBody, err := s.apiClient.Create(obj)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +57,7 @@ func (s *VirtualMachinesClient) Create(obj *VirtualMachine) (*VirtualMachine, er
 func (s *VirtualMachinesClient) Update(namespace, name string, obj *VirtualMachine) (*VirtualMachine, error) {
 	var created *VirtualMachine
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Update(namespacedName, obj)
+	respCode, respBody, err := s.apiClient.Update(namespacedName, obj)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +73,7 @@ func (s *VirtualMachinesClient) Update(namespace, name string, obj *VirtualMachi
 func (s *VirtualMachinesClient) Get(namespace, name string) (*VirtualMachine, error) {
 	var obj *VirtualMachine
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Get(namespacedName)
+	respCode, respBody, err := s.apiClient.Get(namespacedName)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +89,7 @@ func (s *VirtualMachinesClient) Get(namespace, name string) (*VirtualMachine, er
 func (s *VirtualMachinesClient) Delete(namespace, name string, removedDisks []string) (*VirtualMachine, error) {
 	var obj *VirtualMachine
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Delete(namespacedName, map[string]string{
+	respCode, respBody, err := s.apiClient.Delete(namespacedName, map[string]string{
 		"removedDisks": strings.Join(removedDisks, ","),
 	})
 	if err != nil {
@@ -122,7 +128,7 @@ func (s *VirtualMachinesClient) Restart(namespace, name string) error {
 
 func (s *VirtualMachinesClient) simpleAction(namespace, name, action string) error {
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Action(namespacedName, action, nil)
+	respCode, respBody, err := s.apiClient.Action(namespacedName, action, nil)
 	if err != nil {
 		return err
 	}

@@ -1,4 +1,4 @@
-package apis
+package goharv
 
 import (
 	"encoding/json"
@@ -16,12 +16,18 @@ type SVCList struct {
 }
 
 type ServicesClient struct {
-	*Resource
+	*apiClient
+}
+
+func newServicesClient(c *Client) *ServicesClient {
+	return &ServicesClient{
+		apiClient: newAPIClient(c, "services"),
+	}
 }
 
 func (s *ServicesClient) List() (*SVCList, error) {
 	var collection SVCList
-	respCode, respBody, err := s.Resource.List()
+	respCode, respBody, err := s.apiClient.List()
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +40,7 @@ func (s *ServicesClient) List() (*SVCList, error) {
 
 func (s *ServicesClient) Get(name string) (*Service, error) {
 	var obj *Service
-	respCode, respBody, err := s.Resource.Get(name)
+	respCode, respBody, err := s.apiClient.Get(name)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +55,7 @@ func (s *ServicesClient) Get(name string) (*Service, error) {
 
 func (s *ServicesClient) Create(obj *Service) (*Service, error) {
 	var created *Service
-	respCode, respBody, err := s.Resource.Create(obj)
+	respCode, respBody, err := s.apiClient.Create(obj)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +71,7 @@ func (s *ServicesClient) Create(obj *Service) (*Service, error) {
 func (s *ServicesClient) Delete(namespace, name string) (*Service, error) {
 	var obj *Service
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Delete(namespacedName)
+	respCode, respBody, err := s.apiClient.Delete(namespacedName)
 	if err != nil {
 		return nil, err
 	}

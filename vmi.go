@@ -1,4 +1,4 @@
-package apis
+package goharv
 
 import (
 	"encoding/json"
@@ -16,12 +16,18 @@ type VirtualMachineInstanceList struct {
 }
 
 type VirtualMachineInstanceClient struct {
-	*Resource
+	*apiClient
+}
+
+func newVirtualMachineInstanceClient(c *Client) *VirtualMachineInstanceClient {
+	return &VirtualMachineInstanceClient{
+		apiClient: newAPIClient(c, "kubevirt.io.virtualmachineinstance"),
+	}
 }
 
 func (s *VirtualMachineInstanceClient) List() (*VirtualMachineInstanceList, error) {
 	var collection VirtualMachineInstanceList
-	respCode, respBody, err := s.Resource.List()
+	respCode, respBody, err := s.apiClient.List()
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +41,7 @@ func (s *VirtualMachineInstanceClient) List() (*VirtualMachineInstanceList, erro
 func (s *VirtualMachineInstanceClient) Get(namespace, name string) (*VirtualMachineInstance, error) {
 	var obj *VirtualMachineInstance
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Get(namespacedName)
+	respCode, respBody, err := s.apiClient.Get(namespacedName)
 	if err != nil {
 		return nil, err
 	}

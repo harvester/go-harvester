@@ -1,27 +1,33 @@
-package apis
+package goharv
 
 import (
 	"encoding/json"
 	"net/http"
 
 	"github.com/rancher/apiserver/pkg/types"
-	cdiv1beta1 "kubevirt.io/containerized-data-importer/pkg/apis/core/v1beta1"
+	harv1 "github.com/rancher/harvester/pkg/apis/harvester.cattle.io/v1alpha1"
 )
 
-type DataVolume cdiv1beta1.DataVolume
+type KeyPair harv1.KeyPair
 
-type DataVolumeList struct {
+type KeyPairList struct {
 	types.Collection
-	Data []*DataVolume `json:"data"`
+	Data []*KeyPair `json:"data"`
 }
 
-type DataVolumesClient struct {
-	*Resource
+type KeyPairsClient struct {
+	*apiClient
 }
 
-func (s *DataVolumesClient) List() (*DataVolumeList, error) {
-	var collection DataVolumeList
-	respCode, respBody, err := s.Resource.List()
+func newKeyPairsClient(c *Client) *KeyPairsClient {
+	return &KeyPairsClient{
+		apiClient: newAPIClient(c, "harvester.cattle.io.keypairs"),
+	}
+}
+
+func (s *KeyPairsClient) List() (*KeyPairList, error) {
+	var collection KeyPairList
+	respCode, respBody, err := s.apiClient.List()
 	if err != nil {
 		return nil, err
 	}
@@ -32,9 +38,9 @@ func (s *DataVolumesClient) List() (*DataVolumeList, error) {
 	return &collection, err
 }
 
-func (s *DataVolumesClient) Create(obj *DataVolume) (*DataVolume, error) {
-	var created *DataVolume
-	respCode, respBody, err := s.Resource.Create(obj)
+func (s *KeyPairsClient) Create(obj *KeyPair) (*KeyPair, error) {
+	var created *KeyPair
+	respCode, respBody, err := s.apiClient.Create(obj)
 	if err != nil {
 		return nil, err
 	}
@@ -47,10 +53,10 @@ func (s *DataVolumesClient) Create(obj *DataVolume) (*DataVolume, error) {
 	return created, nil
 }
 
-func (s *DataVolumesClient) Update(namespace, name string, obj *DataVolume) (*DataVolume, error) {
-	var created *DataVolume
+func (s *KeyPairsClient) Update(namespace, name string, obj *KeyPair) (*KeyPair, error) {
+	var created *KeyPair
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Update(namespacedName, obj)
+	respCode, respBody, err := s.apiClient.Update(namespacedName, obj)
 	if err != nil {
 		return nil, err
 	}
@@ -63,10 +69,10 @@ func (s *DataVolumesClient) Update(namespace, name string, obj *DataVolume) (*Da
 	return created, nil
 }
 
-func (s *DataVolumesClient) Get(namespace, name string) (*DataVolume, error) {
-	var obj *DataVolume
+func (s *KeyPairsClient) Get(namespace, name string) (*KeyPair, error) {
+	var obj *KeyPair
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Get(namespacedName)
+	respCode, respBody, err := s.apiClient.Get(namespacedName)
 	if err != nil {
 		return nil, err
 	}
@@ -79,10 +85,10 @@ func (s *DataVolumesClient) Get(namespace, name string) (*DataVolume, error) {
 	return obj, nil
 }
 
-func (s *DataVolumesClient) Delete(namespace, name string) (*DataVolume, error) {
-	var obj *DataVolume
+func (s *KeyPairsClient) Delete(namespace, name string) (*KeyPair, error) {
+	var obj *KeyPair
 	namespacedName := namespace + "/" + name
-	respCode, respBody, err := s.Resource.Delete(namespacedName)
+	respCode, respBody, err := s.apiClient.Delete(namespacedName)
 	if err != nil {
 		return nil, err
 	}

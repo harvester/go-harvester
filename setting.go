@@ -1,4 +1,4 @@
-package apis
+package goharv
 
 import (
 	"encoding/json"
@@ -16,12 +16,18 @@ type SettingList struct {
 }
 
 type SettingsClient struct {
-	*Resource
+	*apiClient
+}
+
+func newSettingsClient(c *Client) *SettingsClient {
+	return &SettingsClient{
+		apiClient: newAPIClient(c, "harvester.cattle.io.settings"),
+	}
 }
 
 func (s *SettingsClient) List() (*SettingList, error) {
 	var collection SettingList
-	respCode, respBody, err := s.Resource.List()
+	respCode, respBody, err := s.apiClient.List()
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +40,7 @@ func (s *SettingsClient) List() (*SettingList, error) {
 
 func (s *SettingsClient) Create(obj *Setting) (*Setting, error) {
 	var created *Setting
-	respCode, respBody, err := s.Resource.Create(obj)
+	respCode, respBody, err := s.apiClient.Create(obj)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +55,7 @@ func (s *SettingsClient) Create(obj *Setting) (*Setting, error) {
 
 func (s *SettingsClient) Update(name string, obj *Setting) (*Setting, error) {
 	var created *Setting
-	respCode, respBody, err := s.Resource.Update(name, obj)
+	respCode, respBody, err := s.apiClient.Update(name, obj)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +70,7 @@ func (s *SettingsClient) Update(name string, obj *Setting) (*Setting, error) {
 
 func (s *SettingsClient) Get(name string) (*Setting, error) {
 	var obj *Setting
-	respCode, respBody, err := s.Resource.Get(name)
+	respCode, respBody, err := s.apiClient.Get(name)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +85,7 @@ func (s *SettingsClient) Get(name string) (*Setting, error) {
 
 func (s *SettingsClient) Delete(name string) (*Setting, error) {
 	var obj *Setting
-	respCode, respBody, err := s.Resource.Delete(name)
+	respCode, respBody, err := s.apiClient.Delete(name)
 	if err != nil {
 		return nil, err
 	}

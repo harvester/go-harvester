@@ -2,14 +2,13 @@ package utils
 
 import (
 	"encoding/json"
+	"github.com/futuretea/go-harvester"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/pointer"
 	kubevirtv1 "kubevirt.io/client-go/api/v1"
-
-	"github.com/futuretea/go-harvester/apis"
 )
 
 const (
@@ -21,7 +20,7 @@ const (
 )
 
 type VMBuilder struct {
-	vm              *apis.VirtualMachine
+	vm              *goharv.VirtualMachine
 	sshNames        []string
 	dataVolumeNames []string
 	nicNames        []string
@@ -63,7 +62,7 @@ func NewVMBuilder(creator string) *VMBuilder {
 		},
 	}
 
-	vm := &apis.VirtualMachine{
+	vm := &goharv.VirtualMachine{
 		ObjectMeta: objectMeta,
 		Spec: kubevirtv1.VirtualMachineSpec{
 			Running:             running,
@@ -100,12 +99,12 @@ func (v *VMBuilder) CPU(cores int) *VMBuilder {
 	return v
 }
 
-func (v *VMBuilder) Run() *apis.VirtualMachine {
+func (v *VMBuilder) Run() *goharv.VirtualMachine {
 	v.vm.Spec.Running = pointer.BoolPtr(true)
 	return v.VM()
 }
 
-func (v *VMBuilder) VM() *apis.VirtualMachine {
+func (v *VMBuilder) VM() *goharv.VirtualMachine {
 	if v.vm.Spec.Template.ObjectMeta.Annotations == nil {
 		v.vm.Spec.Template.ObjectMeta.Annotations = make(map[string]string)
 	}
@@ -122,7 +121,7 @@ func (v *VMBuilder) VM() *apis.VirtualMachine {
 	return v.vm
 }
 
-func (v *VMBuilder) Update(vm *apis.VirtualMachine) *VMBuilder {
+func (v *VMBuilder) Update(vm *goharv.VirtualMachine) *VMBuilder {
 	v.vm = vm
 	return v
 }

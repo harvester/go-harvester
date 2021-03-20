@@ -1,4 +1,4 @@
-package apis
+package goharv
 
 import (
 	"encoding/json"
@@ -16,12 +16,18 @@ type UserList struct {
 }
 
 type UsersClient struct {
-	*Resource
+	*apiClient
+}
+
+func newUsersClient(c *Client) *UsersClient {
+	return &UsersClient{
+		apiClient: newAPIClient(c, "harvester.cattle.io.users"),
+	}
 }
 
 func (s *UsersClient) List() (*UserList, error) {
 	var collection UserList
-	respCode, respBody, err := s.Resource.List()
+	respCode, respBody, err := s.apiClient.List()
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +40,7 @@ func (s *UsersClient) List() (*UserList, error) {
 
 func (s *UsersClient) Create(obj *User) (*User, error) {
 	var created *User
-	respCode, respBody, err := s.Resource.Create(obj)
+	respCode, respBody, err := s.apiClient.Create(obj)
 	if err != nil {
 		return nil, err
 	}
