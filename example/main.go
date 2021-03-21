@@ -14,7 +14,7 @@ func main() {
 	if err = c.Auth.Login("admin", "password"); err != nil {
 		panic(err)
 	}
-	users, err := c.User.List()
+	users, err := c.Users.List()
 	if err != nil {
 		return
 	}
@@ -22,15 +22,15 @@ func main() {
 		fmt.Println(user)
 	}
 
-	nodes, err := c.Node.List()
+	nodes, err := c.Nodes.List()
 	if err != nil {
 		return
 	}
 	for _, node := range nodes.Data {
-		fmt.Println(c.Node.Get(node.Name))
+		fmt.Println(c.Nodes.Get(node.Name))
 	}
 
-	services, err := c.Service.List()
+	services, err := c.Services.List()
 	if err != nil {
 		return
 	}

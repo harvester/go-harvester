@@ -2,10 +2,10 @@ package client
 
 import (
 	"encoding/json"
-	error2 "github.com/futuretea/go-harvester/pkg/error"
 	"net/http"
 
 	"github.com/futuretea/go-harvester/pkg/clientbase"
+	"github.com/futuretea/go-harvester/pkg/errors"
 	"github.com/rancher/apiserver/pkg/types"
 	harv1 "github.com/rancher/harvester/pkg/apis/harvester.cattle.io/v1alpha1"
 )
@@ -34,7 +34,7 @@ func (c *UserClient) List() (*UserList, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &collection)
 	return &collection, err
@@ -47,7 +47,7 @@ func (c *UserClient) Create(obj *User) (*User, error) {
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &created)
 	return created, nil
@@ -60,7 +60,7 @@ func (c *UserClient) Update(name string, obj *User) (*User, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	var updated *User
 	if err = json.Unmarshal(respBody, &updated); err != nil {
@@ -76,7 +76,7 @@ func (c *UserClient) Get(name string, opts ...interface{}) (*User, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	var obj *User
 	err = json.Unmarshal(respBody, &obj)
@@ -90,7 +90,7 @@ func (c *UserClient) Delete(name string, opts ...interface{}) (*User, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	var obj *User
 	err = json.Unmarshal(respBody, &obj)

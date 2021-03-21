@@ -2,10 +2,10 @@ package client
 
 import (
 	"encoding/json"
-	error2 "github.com/futuretea/go-harvester/pkg/error"
 	"net/http"
 
 	"github.com/futuretea/go-harvester/pkg/clientbase"
+	"github.com/futuretea/go-harvester/pkg/errors"
 	"github.com/rancher/apiserver/pkg/types"
 	kubevirtv1 "kubevirt.io/client-go/api/v1"
 )
@@ -34,7 +34,7 @@ func (c *VirtualMachineInstanceClient) List() (*VirtualMachineInstanceList, erro
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &collection)
 	return &collection, err
@@ -47,7 +47,7 @@ func (c *VirtualMachineInstanceClient) Create(obj *VirtualMachineInstance) (*Vir
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &created)
 	return created, nil
@@ -60,7 +60,7 @@ func (c *VirtualMachineInstanceClient) Update(namespace, name string, obj *Virtu
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	var updated *VirtualMachineInstance
 	if err = json.Unmarshal(respBody, &updated); err != nil {
@@ -76,7 +76,7 @@ func (c *VirtualMachineInstanceClient) Get(namespace, name string, opts ...inter
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	var obj *VirtualMachineInstance
 	err = json.Unmarshal(respBody, &obj)
@@ -90,7 +90,7 @@ func (c *VirtualMachineInstanceClient) Delete(namespace, name string, opts ...in
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	var obj *VirtualMachineInstance
 	err = json.Unmarshal(respBody, &obj)

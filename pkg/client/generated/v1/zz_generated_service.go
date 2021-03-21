@@ -2,10 +2,10 @@ package client
 
 import (
 	"encoding/json"
-	error2 "github.com/futuretea/go-harvester/pkg/error"
 	"net/http"
 
 	"github.com/futuretea/go-harvester/pkg/clientbase"
+	"github.com/futuretea/go-harvester/pkg/errors"
 	"github.com/rancher/apiserver/pkg/types"
 	corev1 "k8s.io/api/core/v1"
 )
@@ -34,7 +34,7 @@ func (c *ServiceClient) List() (*ServiceList, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &collection)
 	return &collection, err
@@ -47,7 +47,7 @@ func (c *ServiceClient) Create(obj *Service) (*Service, error) {
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &created)
 	return created, nil
@@ -60,7 +60,7 @@ func (c *ServiceClient) Update(namespace, name string, obj *Service) (*Service, 
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	var updated *Service
 	if err = json.Unmarshal(respBody, &updated); err != nil {
@@ -76,7 +76,7 @@ func (c *ServiceClient) Get(namespace, name string, opts ...interface{}) (*Servi
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	var obj *Service
 	err = json.Unmarshal(respBody, &obj)
@@ -90,7 +90,7 @@ func (c *ServiceClient) Delete(namespace, name string, opts ...interface{}) (*Se
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, error2.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	var obj *Service
 	err = json.Unmarshal(respBody, &obj)

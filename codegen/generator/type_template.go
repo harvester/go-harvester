@@ -10,6 +10,7 @@ import (
 {{- end}}
 
 	"github.com/futuretea/go-harvester/pkg/clientbase"
+	"github.com/futuretea/go-harvester/pkg/errors"
 {{- if .schema | hasGet }}
 	"github.com/rancher/apiserver/pkg/types"
 	{{.schema.Attributes.importAlias}} "{{.schema.Attributes.importPackage}}"
@@ -45,7 +46,7 @@ func (c *{{.schema.CodeName}}Client) List() (*{{.schema.CodeName}}List, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &collection)
 	return &collection, err
@@ -58,7 +59,7 @@ func (c *{{.schema.CodeName}}Client) Create(obj *{{.schema.CodeName}}) (*{{.sche
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &created)
 	return created, nil
@@ -76,7 +77,7 @@ func (c *{{.schema.CodeName}}Client) Update(name string, obj *{{.schema.CodeName
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	var updated *{{.schema.CodeName}}
 	if err = json.Unmarshal(respBody, &updated); err != nil {
@@ -97,7 +98,7 @@ func (c *{{.schema.CodeName}}Client) Get(name string, opts ...interface{}) (*{{.
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	var obj *{{.schema.CodeName}}
 	err = json.Unmarshal(respBody, &obj)
@@ -116,7 +117,7 @@ func (c *{{.schema.CodeName}}Client) Delete(name string, opts ...interface{}) (*
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, errors.NewResponseError(respCode, respBody)
 	}
 	var obj *{{.schema.CodeName}}
 	err = json.Unmarshal(respBody, &obj)
@@ -138,7 +139,7 @@ func (c *{{.schema.CodeName}}Client) Delete(name string, opts ...interface{}) (*
 				return err
 			}
 			if respCode != http.StatusNoContent {
-				return clientbase.NewResponseError(respCode, respBody)
+				return errors.NewResponseError(respCode, respBody)
 			}
 			return nil
     {{else if (and (eq $value.Input "") (ne $value.Output ""))}}
@@ -155,7 +156,7 @@ func (c *{{.schema.CodeName}}Client) Delete(name string, opts ...interface{}) (*
 				return err
 			}
 			if respCode != http.StatusNoContent {
-				return clientbase.NewResponseError(respCode, respBody)
+				return errors.NewResponseError(respCode, respBody)
 			}
 			return nil
     {{else}}

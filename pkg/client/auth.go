@@ -3,7 +3,6 @@ package client
 import (
 	"encoding/json"
 	"errors"
-	error2 "github.com/futuretea/go-harvester/pkg/error"
 	"net/http"
 	"net/url"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/rancher/wrangler/pkg/slice"
 
 	"github.com/futuretea/go-harvester/pkg/clientbase"
+	goharverrors "github.com/futuretea/go-harvester/pkg/errors"
 )
 
 func UnmarshalAuthModes(data []byte) (AuthModes, error) {
@@ -43,7 +43,7 @@ func (c *AuthClient) Login(username, password string) error {
 		return err
 	}
 	if respCode != http.StatusOK {
-		return error2.NewResponseError(respCode, respBody)
+		return goharverrors.NewResponseError(respCode, respBody)
 	}
 	authModes, err := UnmarshalAuthModes(respBody)
 	if err != nil {
@@ -69,7 +69,7 @@ func (c *AuthClient) Login(username, password string) error {
 		return err
 	}
 	if respCode != http.StatusOK {
-		return error2.NewResponseError(respCode, respBody)
+		return goharverrors.NewResponseError(respCode, respBody)
 	}
 	return nil
 }
