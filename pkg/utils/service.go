@@ -3,7 +3,7 @@ package utils
 import (
 	"fmt"
 
-	goharv "github.com/futuretea/go-harvester"
+	clientv1 "github.com/futuretea/go-harvester/pkg/client/generated/v1"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -11,14 +11,14 @@ import (
 )
 
 type ServiceBuilder struct {
-	vm       *goharv.VirtualMachine
-	services map[string]*goharv.Service
+	vm       *clientv1.VirtualMachine
+	services map[string]*clientv1.Service
 }
 
-func NewServiceBuilder(vm *goharv.VirtualMachine) *ServiceBuilder {
+func NewServiceBuilder(vm *clientv1.VirtualMachine) *ServiceBuilder {
 	return &ServiceBuilder{
 		vm:       vm,
-		services: make(map[string]*goharv.Service),
+		services: make(map[string]*clientv1.Service),
 	}
 }
 
@@ -48,7 +48,7 @@ func (s *ServiceBuilder) Expose(name string, serviceType corev1.ServiceType, por
 		}
 		servicePorts = append(servicePorts, servicePort)
 	}
-	svc := &goharv.Service{
+	svc := &clientv1.Service{
 		ObjectMeta: objectMeta,
 		Spec: corev1.ServiceSpec{
 			Type:     serviceType,
@@ -60,6 +60,6 @@ func (s *ServiceBuilder) Expose(name string, serviceType corev1.ServiceType, por
 	return s
 }
 
-func (s *ServiceBuilder) Services() map[string]*goharv.Service {
+func (s *ServiceBuilder) Services() map[string]*clientv1.Service {
 	return s.services
 }

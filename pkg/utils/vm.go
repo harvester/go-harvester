@@ -9,7 +9,7 @@ import (
 	"k8s.io/utils/pointer"
 	kubevirtv1 "kubevirt.io/client-go/api/v1"
 
-	goharv "github.com/futuretea/go-harvester"
+	clientv1 "github.com/futuretea/go-harvester/pkg/client/generated/v1"
 )
 
 const (
@@ -21,7 +21,7 @@ const (
 )
 
 type VMBuilder struct {
-	vm              *goharv.VirtualMachine
+	vm              *clientv1.VirtualMachine
 	sshNames        []string
 	dataVolumeNames []string
 	nicNames        []string
@@ -63,7 +63,7 @@ func NewVMBuilder(creator string) *VMBuilder {
 		},
 	}
 
-	vm := &goharv.VirtualMachine{
+	vm := &clientv1.VirtualMachine{
 		ObjectMeta: objectMeta,
 		Spec: kubevirtv1.VirtualMachineSpec{
 			Running:             running,
@@ -100,12 +100,12 @@ func (v *VMBuilder) CPU(cores int) *VMBuilder {
 	return v
 }
 
-func (v *VMBuilder) Run() *goharv.VirtualMachine {
+func (v *VMBuilder) Run() *clientv1.VirtualMachine {
 	v.vm.Spec.Running = pointer.BoolPtr(true)
 	return v.VM()
 }
 
-func (v *VMBuilder) VM() *goharv.VirtualMachine {
+func (v *VMBuilder) VM() *clientv1.VirtualMachine {
 	if v.vm.Spec.Template.ObjectMeta.Annotations == nil {
 		v.vm.Spec.Template.ObjectMeta.Annotations = make(map[string]string)
 	}
@@ -122,7 +122,7 @@ func (v *VMBuilder) VM() *goharv.VirtualMachine {
 	return v.vm
 }
 
-func (v *VMBuilder) Update(vm *goharv.VirtualMachine) *VMBuilder {
+func (v *VMBuilder) Update(vm *clientv1.VirtualMachine) *VMBuilder {
 	v.vm = vm
 	return v
 }

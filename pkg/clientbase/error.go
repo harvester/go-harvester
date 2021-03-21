@@ -1,4 +1,4 @@
-package goharv
+package clientbase
 
 import (
 	"encoding/json"

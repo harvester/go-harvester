@@ -20,9 +20,6 @@
 		"skip-files": [
 			"/zz_generated_"
 		],
-		"skip-dirs": [
-			"generated"
-		],
 		"deadline": "5m",
 		"tests": true,
 		"build-tags": [
