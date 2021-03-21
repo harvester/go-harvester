@@ -2,6 +2,7 @@ package client
 
 import (
 	"encoding/json"
+	error2 "github.com/futuretea/go-harvester/pkg/error"
 	"net/http"
 
 	"github.com/futuretea/go-harvester/pkg/clientbase"
@@ -33,7 +34,7 @@ func (c *VirtualMachineClient) List() (*VirtualMachineList, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &collection)
 	return &collection, err
@@ -46,7 +47,7 @@ func (c *VirtualMachineClient) Create(obj *VirtualMachine) (*VirtualMachine, err
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &created)
 	return created, nil
@@ -59,7 +60,7 @@ func (c *VirtualMachineClient) Update(namespace, name string, obj *VirtualMachin
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	var updated *VirtualMachine
 	if err = json.Unmarshal(respBody, &updated); err != nil {
@@ -75,7 +76,7 @@ func (c *VirtualMachineClient) Get(namespace, name string, opts ...interface{}) 
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	var obj *VirtualMachine
 	err = json.Unmarshal(respBody, &obj)
@@ -89,7 +90,7 @@ func (c *VirtualMachineClient) Delete(namespace, name string, opts ...interface{
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	var obj *VirtualMachine
 	err = json.Unmarshal(respBody, &obj)
@@ -103,7 +104,7 @@ func (c *VirtualMachineClient) AbortMigration(namespace, name string) error {
 		return err
 	}
 	if respCode != http.StatusNoContent {
-		return clientbase.NewResponseError(respCode, respBody)
+		return error2.NewResponseError(respCode, respBody)
 	}
 	return nil
 }
@@ -115,7 +116,7 @@ func (c *VirtualMachineClient) Backup(namespace, name string, backupInput interf
 		return err
 	}
 	if respCode != http.StatusNoContent {
-		return clientbase.NewResponseError(respCode, respBody)
+		return error2.NewResponseError(respCode, respBody)
 	}
 	return nil
 }
@@ -127,7 +128,7 @@ func (c *VirtualMachineClient) EjectCdRom(namespace, name string, ejectCdRomActi
 		return err
 	}
 	if respCode != http.StatusNoContent {
-		return clientbase.NewResponseError(respCode, respBody)
+		return error2.NewResponseError(respCode, respBody)
 	}
 	return nil
 }
@@ -139,7 +140,7 @@ func (c *VirtualMachineClient) Migrate(namespace, name string) error {
 		return err
 	}
 	if respCode != http.StatusNoContent {
-		return clientbase.NewResponseError(respCode, respBody)
+		return error2.NewResponseError(respCode, respBody)
 	}
 	return nil
 }
@@ -151,7 +152,7 @@ func (c *VirtualMachineClient) Pause(namespace, name string) error {
 		return err
 	}
 	if respCode != http.StatusNoContent {
-		return clientbase.NewResponseError(respCode, respBody)
+		return error2.NewResponseError(respCode, respBody)
 	}
 	return nil
 }
@@ -163,7 +164,7 @@ func (c *VirtualMachineClient) Restart(namespace, name string) error {
 		return err
 	}
 	if respCode != http.StatusNoContent {
-		return clientbase.NewResponseError(respCode, respBody)
+		return error2.NewResponseError(respCode, respBody)
 	}
 	return nil
 }
@@ -175,7 +176,7 @@ func (c *VirtualMachineClient) Restore(namespace, name string, restoreInput inte
 		return err
 	}
 	if respCode != http.StatusNoContent {
-		return clientbase.NewResponseError(respCode, respBody)
+		return error2.NewResponseError(respCode, respBody)
 	}
 	return nil
 }
@@ -187,7 +188,7 @@ func (c *VirtualMachineClient) Start(namespace, name string) error {
 		return err
 	}
 	if respCode != http.StatusNoContent {
-		return clientbase.NewResponseError(respCode, respBody)
+		return error2.NewResponseError(respCode, respBody)
 	}
 	return nil
 }
@@ -199,7 +200,7 @@ func (c *VirtualMachineClient) Stop(namespace, name string) error {
 		return err
 	}
 	if respCode != http.StatusNoContent {
-		return clientbase.NewResponseError(respCode, respBody)
+		return error2.NewResponseError(respCode, respBody)
 	}
 	return nil
 }
@@ -211,7 +212,7 @@ func (c *VirtualMachineClient) Unpause(namespace, name string) error {
 		return err
 	}
 	if respCode != http.StatusNoContent {
-		return clientbase.NewResponseError(respCode, respBody)
+		return error2.NewResponseError(respCode, respBody)
 	}
 	return nil
 }

@@ -3,6 +3,7 @@ package client
 import (
 	"encoding/json"
 	"errors"
+	error2 "github.com/futuretea/go-harvester/pkg/error"
 	"net/http"
 	"net/url"
 
@@ -42,7 +43,7 @@ func (c *AuthClient) Login(username, password string) error {
 		return err
 	}
 	if respCode != http.StatusOK {
-		return clientbase.NewResponseError(respCode, respBody)
+		return error2.NewResponseError(respCode, respBody)
 	}
 	authModes, err := UnmarshalAuthModes(respBody)
 	if err != nil {
@@ -68,7 +69,7 @@ func (c *AuthClient) Login(username, password string) error {
 		return err
 	}
 	if respCode != http.StatusOK {
-		return clientbase.NewResponseError(respCode, respBody)
+		return error2.NewResponseError(respCode, respBody)
 	}
 	return nil
 }

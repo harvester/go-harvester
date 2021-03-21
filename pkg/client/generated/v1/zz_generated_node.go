@@ -2,6 +2,7 @@ package client
 
 import (
 	"encoding/json"
+	error2 "github.com/futuretea/go-harvester/pkg/error"
 	"net/http"
 
 	"github.com/futuretea/go-harvester/pkg/clientbase"
@@ -33,7 +34,7 @@ func (c *NodeClient) List() (*NodeList, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &collection)
 	return &collection, err
@@ -46,7 +47,7 @@ func (c *NodeClient) Create(obj *Node) (*Node, error) {
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &created)
 	return created, nil
@@ -59,7 +60,7 @@ func (c *NodeClient) Update(name string, obj *Node) (*Node, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	var updated *Node
 	if err = json.Unmarshal(respBody, &updated); err != nil {
@@ -75,7 +76,7 @@ func (c *NodeClient) Get(name string, opts ...interface{}) (*Node, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	var obj *Node
 	err = json.Unmarshal(respBody, &obj)
@@ -89,7 +90,7 @@ func (c *NodeClient) Delete(name string, opts ...interface{}) (*Node, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	var obj *Node
 	err = json.Unmarshal(respBody, &obj)

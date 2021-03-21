@@ -2,6 +2,7 @@ package client
 
 import (
 	"encoding/json"
+	error2 "github.com/futuretea/go-harvester/pkg/error"
 	"net/http"
 
 	"github.com/futuretea/go-harvester/pkg/clientbase"
@@ -33,7 +34,7 @@ func (c *SettingClient) List() (*SettingList, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &collection)
 	return &collection, err
@@ -46,7 +47,7 @@ func (c *SettingClient) Create(obj *Setting) (*Setting, error) {
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &created)
 	return created, nil
@@ -59,7 +60,7 @@ func (c *SettingClient) Update(name string, obj *Setting) (*Setting, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	var updated *Setting
 	if err = json.Unmarshal(respBody, &updated); err != nil {
@@ -75,7 +76,7 @@ func (c *SettingClient) Get(name string, opts ...interface{}) (*Setting, error) 
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	var obj *Setting
 	err = json.Unmarshal(respBody, &obj)
@@ -89,7 +90,7 @@ func (c *SettingClient) Delete(name string, opts ...interface{}) (*Setting, erro
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	var obj *Setting
 	err = json.Unmarshal(respBody, &obj)

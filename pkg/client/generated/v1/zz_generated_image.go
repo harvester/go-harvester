@@ -2,6 +2,7 @@ package client
 
 import (
 	"encoding/json"
+	error2 "github.com/futuretea/go-harvester/pkg/error"
 	"net/http"
 
 	"github.com/futuretea/go-harvester/pkg/clientbase"
@@ -33,7 +34,7 @@ func (c *ImageClient) List() (*ImageList, error) {
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &collection)
 	return &collection, err
@@ -46,7 +47,7 @@ func (c *ImageClient) Create(obj *Image) (*Image, error) {
 		return nil, err
 	}
 	if respCode != http.StatusCreated {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	err = json.Unmarshal(respBody, &created)
 	return created, nil
@@ -59,7 +60,7 @@ func (c *ImageClient) Update(namespace, name string, obj *Image) (*Image, error)
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	var updated *Image
 	if err = json.Unmarshal(respBody, &updated); err != nil {
@@ -75,7 +76,7 @@ func (c *ImageClient) Get(namespace, name string, opts ...interface{}) (*Image, 
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	var obj *Image
 	err = json.Unmarshal(respBody, &obj)
@@ -89,7 +90,7 @@ func (c *ImageClient) Delete(namespace, name string, opts ...interface{}) (*Imag
 		return nil, err
 	}
 	if respCode != http.StatusOK {
-		return nil, clientbase.NewResponseError(respCode, respBody)
+		return nil, error2.NewResponseError(respCode, respBody)
 	}
 	var obj *Image
 	err = json.Unmarshal(respBody, &obj)

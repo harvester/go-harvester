@@ -1,4 +1,4 @@
-package utils
+package builder
 
 import (
 	kubevirtv1 "kubevirt.io/client-go/api/v1"

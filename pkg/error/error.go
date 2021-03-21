@@ -1,4 +1,4 @@
-package clientbase
+package error
 
 import (
 	"encoding/json"
