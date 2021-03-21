@@ -75,12 +75,6 @@ func (r *apiClient) List() (respCode int, respBody []byte, err error) {
 		Code(&respCode).
 		Debug(r.Debug).
 		Do()
-	if err != nil {
-		return
-	}
-	if respCode != http.StatusOK {
-		return
-	}
 	return
 }
 

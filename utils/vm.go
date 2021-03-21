@@ -2,13 +2,14 @@ package utils
 
 import (
 	"encoding/json"
-	"github.com/futuretea/go-harvester"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/pointer"
 	kubevirtv1 "kubevirt.io/client-go/api/v1"
+
+	goharv "github.com/futuretea/go-harvester"
 )
 
 const (
