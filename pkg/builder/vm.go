@@ -9,7 +9,7 @@ import (
 	"k8s.io/utils/pointer"
 	kubevirtv1 "kubevirt.io/client-go/api/v1"
 
-	clientv1 "github.com/futuretea/go-harvester/pkg/client/generated/v1"
+	clientv1 "github.com/harvester/go-harvester/pkg/client/generated/v1"
 )
 
 const (

@@ -9,8 +9,8 @@ import (
 	"encoding/json"
 {{- end}}
 
-	"github.com/futuretea/go-harvester/pkg/clientbase"
-	"github.com/futuretea/go-harvester/pkg/errors"
+	"github.com/harvester/go-harvester/pkg/clientbase"
+	"github.com/harvester/go-harvester/pkg/errors"
 {{- if .schema | hasGet }}
 	"github.com/rancher/apiserver/pkg/types"
 	{{.schema.Attributes.importAlias}} "{{.schema.Attributes.importPackage}}"

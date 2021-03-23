@@ -1,4 +1,4 @@
-module github.com/futuretea/go-harvester
+module github.com/harvester/go-harvester
 
 go 1.13
 

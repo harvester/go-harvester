@@ -6,7 +6,7 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 
-	v1client "github.com/futuretea/go-harvester/pkg/client/generated/v1"
+	v1client "github.com/harvester/go-harvester/pkg/client/generated/v1"
 )
 
 type Client struct {

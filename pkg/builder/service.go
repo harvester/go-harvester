@@ -3,7 +3,7 @@ package builder
 import (
 	"fmt"
 
-	clientv1 "github.com/futuretea/go-harvester/pkg/client/generated/v1"
+	clientv1 "github.com/harvester/go-harvester/pkg/client/generated/v1"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

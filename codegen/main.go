@@ -8,7 +8,7 @@ import (
 
 	types "github.com/rancher/wrangler/pkg/schemas"
 
-	"github.com/futuretea/go-harvester/codegen/generator"
+	"github.com/harvester/go-harvester/codegen/generator"
 )
 
 var (
