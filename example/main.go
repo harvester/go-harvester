@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/futuretea/go-harvester/pkg/client"
+	"github.com/harvester/go-harvester/pkg/client"
 )
 
 func main() {

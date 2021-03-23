@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/futuretea/go-harvester/pkg/clientbase"
-	"github.com/futuretea/go-harvester/pkg/errors"
+	"github.com/harvester/go-harvester/pkg/clientbase"
+	"github.com/harvester/go-harvester/pkg/errors"
 	"github.com/rancher/apiserver/pkg/types"
 	cdiv1beta1 "kubevirt.io/containerized-data-importer/pkg/apis/core/v1beta1"
 )

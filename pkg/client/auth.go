@@ -9,8 +9,8 @@ import (
 	"github.com/guonaihong/gout"
 	"github.com/rancher/wrangler/pkg/slice"
 
-	"github.com/futuretea/go-harvester/pkg/clientbase"
-	goharverrors "github.com/futuretea/go-harvester/pkg/errors"
+	"github.com/harvester/go-harvester/pkg/clientbase"
+	goharverrors "github.com/harvester/go-harvester/pkg/errors"
 )
 
 func UnmarshalAuthModes(data []byte) (AuthModes, error) {
