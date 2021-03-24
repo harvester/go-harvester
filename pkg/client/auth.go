@@ -49,7 +49,7 @@ func (c *AuthClient) Login(username, password string) error {
 	if err != nil {
 		return err
 	}
-	if slice.ContainsString(authModes.Modes, "rancher") {
+	if len(authModes.Modes) == 1 && authModes.Modes[0] == "rancher" {
 		respCode, respBody, err = c.v3localProviders.Action("local", "login", gout.H{
 			"username":     username,
 			"password":     password,
