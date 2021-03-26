@@ -11,7 +11,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err = c.Auth.Login("admin", "password"); err != nil {
+	c.Auth.V1AuthMode.Debug = true
+	if err = c.Auth.Login("admin", "admin"); err != nil {
 		panic(err)
 	}
 	users, err := c.Users.List()
