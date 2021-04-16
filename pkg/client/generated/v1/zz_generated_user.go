@@ -89,6 +89,9 @@ func (c *UserClient) Delete(name string, opts ...interface{}) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
+	if respCode == http.StatusNoContent {
+		return nil, nil
+	}
 	if respCode != http.StatusOK {
 		return nil, errors.NewResponseError(respCode, respBody)
 	}

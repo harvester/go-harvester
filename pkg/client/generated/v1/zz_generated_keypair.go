@@ -89,6 +89,9 @@ func (c *KeypairClient) Delete(namespace, name string, opts ...interface{}) (*Ke
 	if err != nil {
 		return nil, err
 	}
+	if respCode == http.StatusNoContent {
+		return nil, nil
+	}
 	if respCode != http.StatusOK {
 		return nil, errors.NewResponseError(respCode, respBody)
 	}
