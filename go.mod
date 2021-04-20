@@ -38,7 +38,7 @@ replace (
 	k8s.io/mount-utils => k8s.io/mount-utils v0.20.4
 	k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.20.4
 
-	kubevirt.io/client-go => github.com/rancher/kubevirt-client-go v0.20.2-0.20210226083314-113aa8c70a95
+	kubevirt.io/client-go => github.com/kubevirt/client-go v0.40.0-rc.2
 	kubevirt.io/containerized-data-importer => github.com/rancher/kubevirt-containerized-data-importer v1.26.1-0.20210303063201-9e7a78643487
 	sigs.k8s.io/structured-merge-diff => sigs.k8s.io/structured-merge-diff v0.0.0-20190302045857-e85c7b244fd2
 )
@@ -48,13 +48,13 @@ require (
 	github.com/k8snetworkplumbingwg/network-attachment-definition-client v0.0.0-20200331171230-d50e42f2b669
 	github.com/pkg/errors v0.9.1
 	github.com/rancher/apiserver v0.0.0-20210209001659-a17289640582
-	github.com/rancher/harvester v0.0.2-0.20210420022352-cd1365517c34
+	github.com/rancher/harvester v0.0.2-0.20210420062805-c8e3e5b1f1e6
 	github.com/rancher/wrangler v0.7.3-0.20210219161540-ef7fe9ce2443
 	golang.org/x/tools v0.1.0
 	k8s.io/api v0.20.4
 	k8s.io/apimachinery v0.20.4
 	k8s.io/utils v0.0.0-20201110183641-67b214c5f920
-	kubevirt.io/client-go v0.38.1
+	kubevirt.io/client-go v0.40.0-rc.2
 	kubevirt.io/containerized-data-importer v1.31.0
 	sigs.k8s.io/yaml v1.2.0
 )
