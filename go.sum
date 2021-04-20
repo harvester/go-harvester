@@ -1027,8 +1027,8 @@ github.com/rancher/dynamiclistener v0.2.1-0.20200714201033-9c1939da3af9/go.mod h
 github.com/rancher/dynamiclistener v0.2.1-0.20200910203214-85f32491cb09/go.mod h1:qr0QfhwzcVCR+Ao9WyfnE+jmOpfEAdRhXtNOZGJ3nCQ=
 github.com/rancher/eks-operator v1.0.6/go.mod h1:GB2kyPtIN0r+DGlUcDgEUMsB4qRwZH7OKsraemZT+GA=
 github.com/rancher/go-rancher v0.1.1-0.20190307222549-9756097e5e4c/go.mod h1:7oQvGNiJsGvrUgB+7AH8bmdzuR0uhULfwKb43Ht0hUk=
-github.com/rancher/harvester v0.0.2-0.20210406071214-bde3f1680e82 h1:yy4BSrdX8voBaTfhL4/KxFGZBSxfZ15uYmlTKswyzxI=
-github.com/rancher/harvester v0.0.2-0.20210406071214-bde3f1680e82/go.mod h1:URezeR5zkUDik1bJlaguQDhpGzydRWxuOYJfPxBRxeY=
+github.com/rancher/harvester v0.0.2-0.20210420022352-cd1365517c34 h1:1gSFLq8kO5UHKsH15FWbLdXzZgMb7UTuGv60Tt2WYtg=
+github.com/rancher/harvester v0.0.2-0.20210420022352-cd1365517c34/go.mod h1:URezeR5zkUDik1bJlaguQDhpGzydRWxuOYJfPxBRxeY=
 github.com/rancher/kubernetes-provider-detector v0.1.2/go.mod h1:ypuJS7kP7rUiAn330xG46mj+Nhvym05GM8NqMVekpH0=
 github.com/rancher/kubevirt-client-go v0.20.2-0.20210226083314-113aa8c70a95 h1:76mEFgQhi+vMdZmC18IFgdwWIgl2NzBwan/jeGxBngE=
 github.com/rancher/kubevirt-client-go v0.20.2-0.20210226083314-113aa8c70a95/go.mod h1:X2WSG/ovT8fQmCq1qnAR8RW61xj5iDuZoiRSgTQpEiA=

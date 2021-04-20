@@ -9,6 +9,7 @@ import (
 	types "github.com/rancher/wrangler/pkg/schemas"
 
 	"github.com/harvester/go-harvester/codegen/generator"
+	"github.com/harvester/go-harvester/pkg/utils"
 )
 
 var (
@@ -42,19 +43,24 @@ func GenerateClient(schemas *types.Schemas, group string, backendTypes map[strin
 }
 
 var (
-	userSchema = types.Schema{
+	harvesterAPIGroup         = utils.HarvesterAPIGroup
+	harvesterPluralNamePrefix = harvesterAPIGroup + "."
+	harvesterAPIVersion       = "v1beta1"
+	harvesterImportPackage    = "github.com/rancher/harvester/pkg/apis/" + harvesterAPIGroup + "/" + harvesterAPIVersion
+	harvesterImportAlias      = "harv1"
+	userSchema                = types.Schema{
 		ID:         "user",
 		CodeName:   "User",
-		PluralName: "harvester.cattle.io.users",
+		PluralName: harvesterPluralNamePrefix + "users",
 		CollectionMethods: []string{
 			http.MethodGet,
 			http.MethodPost,
 		},
 		Attributes: map[string]interface{}{
 			"version":       "v1",
-			"group":         "harvester.cattle.io",
-			"importPackage": "github.com/rancher/harvester/pkg/apis/harvester.cattle.io/v1alpha1",
-			"importAlias":   "harv1",
+			"group":         harvesterAPIGroup,
+			"importPackage": harvesterImportPackage,
+			"importAlias":   harvesterImportAlias,
 			"importType":    "User",
 			"namespaced":    false,
 		},
@@ -62,16 +68,16 @@ var (
 	imageSchema = types.Schema{
 		ID:         "image",
 		CodeName:   "Image",
-		PluralName: "harvester.cattle.io.virtualmachineimages",
+		PluralName: harvesterPluralNamePrefix + "virtualmachineimages",
 		CollectionMethods: []string{
 			http.MethodGet,
 			http.MethodPost,
 		},
 		Attributes: map[string]interface{}{
 			"version":       "v1",
-			"group":         "harvester.cattle.io",
-			"importPackage": "github.com/rancher/harvester/pkg/apis/harvester.cattle.io/v1alpha1",
-			"importAlias":   "harv1",
+			"group":         harvesterAPIGroup,
+			"importPackage": harvesterImportPackage,
+			"importAlias":   harvesterImportAlias,
 			"importType":    "VirtualMachineImage",
 			"namespaced":    true,
 		},
@@ -79,16 +85,16 @@ var (
 	keypairSchema = types.Schema{
 		ID:         "keypair",
 		CodeName:   "Keypair",
-		PluralName: "harvester.cattle.io.keypairs",
+		PluralName: harvesterPluralNamePrefix + "keypairs",
 		CollectionMethods: []string{
 			http.MethodGet,
 			http.MethodPost,
 		},
 		Attributes: map[string]interface{}{
 			"version":       "v1",
-			"group":         "harvester.cattle.io",
-			"importPackage": "github.com/rancher/harvester/pkg/apis/harvester.cattle.io/v1alpha1",
-			"importAlias":   "harv1",
+			"group":         harvesterAPIGroup,
+			"importPackage": harvesterImportPackage,
+			"importAlias":   harvesterImportAlias,
 			"importType":    "KeyPair",
 			"namespaced":    true,
 		},
@@ -96,16 +102,16 @@ var (
 	settingSchema = types.Schema{
 		ID:         "setting",
 		CodeName:   "Setting",
-		PluralName: "harvester.cattle.io.settings",
+		PluralName: harvesterPluralNamePrefix + "settings",
 		CollectionMethods: []string{
 			http.MethodGet,
 			http.MethodPost,
 		},
 		Attributes: map[string]interface{}{
 			"version":       "v1",
-			"group":         "harvester.cattle.io",
-			"importPackage": "github.com/rancher/harvester/pkg/apis/harvester.cattle.io/v1alpha1",
-			"importAlias":   "harv1",
+			"group":         harvesterAPIGroup,
+			"importPackage": harvesterImportPackage,
+			"importAlias":   harvesterImportAlias,
 			"importType":    "Setting",
 			"namespaced":    false,
 		},
