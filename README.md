@@ -1,6 +1,6 @@
 # go-harvester
 
-go-harvester is a [Go](http://golang.org/) client for [Harvester](https://github.com/rancher/harvester) .
+go-harvester is a [Go](http://golang.org/) client for [Harvester](https://github.com/harvester/harvester) .
 
 
 ## Installation

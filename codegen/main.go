@@ -46,7 +46,7 @@ var (
 	harvesterAPIGroup         = utils.HarvesterAPIGroup
 	harvesterPluralNamePrefix = harvesterAPIGroup + "."
 	harvesterAPIVersion       = "v1beta1"
-	harvesterImportPackage    = "github.com/rancher/harvester/pkg/apis/" + harvesterAPIGroup + "/" + harvesterAPIVersion
+	harvesterImportPackage    = "github.com/harvester/harvester/pkg/apis/" + harvesterAPIGroup + "/" + harvesterAPIVersion
 	harvesterImportAlias      = "harv1"
 	userSchema                = types.Schema{
 		ID:         "user",
