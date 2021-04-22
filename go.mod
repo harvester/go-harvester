@@ -45,10 +45,10 @@ replace (
 
 require (
 	github.com/guonaihong/gout v0.1.5
+	github.com/harvester/harvester v0.0.2-0.20210422150733-631d78c05787
 	github.com/k8snetworkplumbingwg/network-attachment-definition-client v0.0.0-20200331171230-d50e42f2b669
 	github.com/pkg/errors v0.9.1
 	github.com/rancher/apiserver v0.0.0-20210209001659-a17289640582
-	github.com/rancher/harvester v0.0.2-0.20210420062805-c8e3e5b1f1e6
 	github.com/rancher/wrangler v0.7.3-0.20210219161540-ef7fe9ce2443
 	golang.org/x/tools v0.1.0
 	k8s.io/api v0.20.4
