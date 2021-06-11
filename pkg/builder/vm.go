@@ -91,6 +91,25 @@ func (v *VMBuilder) Name(name string) *VMBuilder {
 	return v
 }
 
+func (v *VMBuilder) SpecTemplateAnnotations(annotations map[string]string) *VMBuilder {
+	if v.vm.Spec.Template.ObjectMeta.Annotations == nil {
+		v.vm.Spec.Template.ObjectMeta.Annotations = make(map[string]string)
+	}
+	for key, val := range annotations {
+		v.vm.Spec.Template.ObjectMeta.Annotations[key] = val
+	}
+	return v
+}
+func (v *VMBuilder) SpecTemplateLabels(annotations map[string]string) *VMBuilder {
+	if v.vm.Spec.Template.ObjectMeta.Labels == nil {
+		v.vm.Spec.Template.ObjectMeta.Labels = make(map[string]string)
+	}
+	for key, val := range annotations {
+		v.vm.Spec.Template.ObjectMeta.Labels[key] = val
+	}
+	return v
+}
+
 func (v *VMBuilder) Namespace(namespace string) *VMBuilder {
 	v.vm.ObjectMeta.Namespace = namespace
 	return v
