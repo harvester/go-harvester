@@ -1,7 +1,10 @@
 # go-harvester
 
-> [!NOTE]  
+> [!NOTE]
 > This repository is not maintained. Please use the clientset at https://github.com/harvester/harvester/blob/master/pkg/generated/clientset/versioned/clientset.go.
+> Some projects using the clientset:
+> - https://github.com/harvester/terraform-provider-harvester
+> - https://github.com/belgaied2/harvester-cli
 
 go-harvester is a [Go](http://golang.org/) client for [Harvester](https://github.com/harvester/harvester) .
 
