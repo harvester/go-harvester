@@ -1,5 +1,8 @@
 # go-harvester
 
+> [!NOTE]  
+> This repository is not maintained. Please use the clientset at https://github.com/harvester/harvester/blob/master/pkg/generated/clientset/versioned/clientset.go.
+
 go-harvester is a [Go](http://golang.org/) client for [Harvester](https://github.com/harvester/harvester) .
 
 
